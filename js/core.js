@@ -141,10 +141,12 @@ core.roar=function(now,ville){const S=core.S;if(S.dead||S.sleep)return{ok:0,why:
 core.sleep=function(on){const S=core.S;if(S.dead)return{ok:0,why:'Il ne bouge plus.'};
  if(on){if(S.rage>=70)return{ok:0,why:'Il est trop énervé pour dormir.'};if(S.energie>=90)return{ok:0,why:"Il n'a pas sommeil."}}
  S.sleep=on;return{ok:1}};
-core.wash=function(now){const S=core.S,w=S.dead?'Il ne bouge plus.':S.sleep?'Il dort.':'';if(w)return{ok:0,why:w};
+/* laver : on le frotte soi-même. washStep ajoute de la propreté à chaque frottement, washEnd paie la croissance */
+core.washCan=function(){const S=core.S,w=S.dead?'Il ne bouge plus.':S.sleep?'Il dort.':'';if(w)return{ok:0,why:w};
  if(S.rage>=70)return{ok:0,why:'Trop énervé : il ne se laisse pas approcher.'};
- if(S.proprete>=95)return{ok:0,why:'Il est déjà propre.'};
- S.washT=now;S.proprete=cl(S.proprete+45);return{ok:1,g:gain(GAIN.wash)}};
+ if(S.proprete>=99.5)return{ok:0,why:'Il est déjà propre.'};return{ok:1}};
+core.washStep=function(n){const S=core.S;S.proprete=cl(S.proprete+n);return S.proprete>=100};
+core.washEnd=function(gagne,now){const S=core.S;S.washT=now;return{g:gagne>=4?gain(GAIN.wash*Math.min(1,gagne/45)):null}};
 /* jouer : un jeu d'adresse dans la tanière. q = 0 raté, 1 bien, 2 en plein dedans */
 core.playCan=function(now){const S=core.S,w=core.busy();if(w)return{ok:0,why:w};
  if(now-S.playT<20000)return{ok:0,why:"Il n'en a plus envie pour l'instant."};

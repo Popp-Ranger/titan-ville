@@ -98,6 +98,20 @@ main{flex:1;min-height:0;position:relative;border-block:1px solid var(--trait)}
 @keyframes rouge{from{opacity:.1}to{opacity:.26}}
 #bar button.bat i{animation:bat .6s ease-in-out infinite alternate}
 @keyframes bat{to{box-shadow:0 0 16px #ff6a2a99;background:#ff6a2a22}}
+/* sommeil : il respire, sa lueur bat lentement, la tanière s'assombrit, de la buée monte */
+#mi.dort{animation:dodo 4.2s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes dodo{50%{transform:scale(.985,1.035)}}
+#mi.dort .lm{animation:lueur 4.2s ease-in-out infinite}
+@keyframes lueur{0%,100%{opacity:.08}50%{opacity:.36}}
+#nuit{opacity:0;transition:opacity 1.4s}
+.dort #nuit{opacity:.5}
+.souffle{fill:#8d9aaa;opacity:0;transform-box:fill-box;transform-origin:center;animation:souffle 3.6s ease-out forwards}
+@keyframes souffle{0%{opacity:0;transform:translate(0,0) scale(.4)}20%{opacity:.4}100%{opacity:0;transform:translate(12px,-36px) scale(2.4)}}
+/* lavage */
+.suie{fill:#6b7480;opacity:.6}
+.goutte{fill:#bfe6ff;animation:goutte .9s ease-in forwards}
+@keyframes goutte{0%{opacity:.9}100%{opacity:0;transform:translateY(26px)}}
+.wash #pluie{opacity:.55}
 #pluie{opacity:0;transition:opacity .4s}
 .wash #pluie{opacity:1}
 .fade{animation:fade .35s forwards}

@@ -9,7 +9,7 @@ const DH=[0,74,98,124,150];       // dans la tanière
 const WALK=85;                    // px/s
 let ecran='',mode='taniere',shown=-1,ents=[],eid=0,spawnT=0,last=0,cam=0,sayT=0,choix=0,bph=[],barKey='',flashT=0;
 const mon={x:14,tx:null,face:1,tgt:null,cool:0,walk:0,combo:0,comboT:0};
-const den={x:150,tx:150,wait:2,face:1,game:null};
+const den={x:150,tx:150,wait:2,face:1,game:null,wash:null,puffT:0};
 const svg=$('#scene');
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const hhmm=t=>{const d=new Date(t);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
@@ -33,6 +33,7 @@ function son(k){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)(
  const bruit=(d,fr,v)=>{const b=AC.createBuffer(1,Math.floor(AC.sampleRate*d),AC.sampleRate),a=b.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=(Math.random()*2-1)*Math.pow(1-i/a.length,2);
   const s=AC.createBufferSource(),fl=AC.createBiquadFilter(),g=AC.createGain();s.buffer=b;fl.type='lowpass';fl.frequency.value=fr;g.gain.value=v;s.connect(fl);fl.connect(g);g.connect(AC.destination);s.start(t)};
  if(k==='croc')bruit(.1,1500,.45);
+ else if(k==='eau')bruit(.2,3400,.16);
  else if(k==='chute')bruit(1.2,170,1);
  else{bruit(.25,240,.8);const o=AC.createOscillator(),g=AC.createGain();o.frequency.setValueAtTime(92,t);o.frequency.exponentialRampToValueAtTime(36,t+.22);g.gain.setValueAtTime(.7,t);g.gain.exponentialRampToValueAtTime(.001,t+.26);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+.27)}
  }catch(e){}}
@@ -42,7 +43,7 @@ function rugit(){try{const a=new Audio('sons/rugir-'+(1+Math.floor(Math.random()
 function say(t,ms=2600){if(!t)return;sayT=Date.now()+ms;const m=$('#msg');m.textContent=t;m.className='t hot'}
 function anim(c,ms=500){const m=$('#mi');if(!m)return;m.classList.remove('bite','hit','hop','roar');void m.getBBox();m.classList.add(c);setTimeout(()=>m.classList.remove(c),ms)}
 function shake(){svg.classList.remove('shake');void svg.getBBox();svg.classList.add('shake');setTimeout(()=>svg.classList.remove('shake'),340)}
-function glow(){const S=C.S,m=$('#mi');if(m)m.style.setProperty('--gl',S.dead?.04:S.sleep?.18:C.frenzied(Date.now())?1.6:f2(.35+.65*S.faim/100))}
+function glow(){const S=C.S,m=$('#mi');if(m){m.style.setProperty('--gl',S.dead?.04:S.sleep?.18:C.frenzied(Date.now())?1.6:f2(.35+.65*S.faim/100));m.classList.toggle('dort',!!S.sleep)}}
 function place(x,y,face,h){const g=$('#mg');if(g){const s=h/168;g.setAttribute('transform',`translate(${f(x)},${f(y)}) scale(${f2(face*s)},${f2(s)}) translate(-160,-190)`)}}
 function drawMon(){const S=C.S,g=$('#mon'),sp=A.SP[S.sp];if(!g)return;
  if(S.stage===0){g.innerHTML=`<g transform="translate(150,338) scale(1.5)" data-oeuf="1">${A.egg(sp.c,S.taps/12)}<circle cy="-30" r="34" fill="#000" fill-opacity="0"/></g>`;return}
@@ -63,16 +64,16 @@ function hud(){const S=C.S;if(!S)return;const now=Date.now(),sp=A.SP[S.sp],st=C.
  $('#jauges').innerHTML=(S.stage===0?'':JG.map(([k,l,hot,c])=>{const v=Math.round(S[k]);return `<div class="jg t${hot(v)?' hot':''}" style="--c:${c}"><div>${l}<span>${v}</span></div><u style="--v:${v}%"></u></div>`}).join(''))
   +`<div class="jg ev t${ev.gel?' hot':''}${now<flashT?' gain':''}" style="--c:${sp.c}"><div>${S.stage===0?'Éclosion':ev.next?'Évolution · '+ev.next:'Terreur · stade final'}<span>${S.stage===0?Math.round(ev.p*100)+' %':!ev.next?nb(S.score):ev.gel?'arrêtée : '+ev.gel:(ev.x2?'×2 · ':'')+'dans '+dans(ev.reste)}</span></div><u style="--v:${(ev.p*100).toFixed(1)}%"></u></div>`;
  $('#dep').textContent=S.log[0]?hhmm(S.log[0].t)+' · '+S.log[0].x:'';
- if(now>sayT&&!den.game){const[t,hot]=C.humeur(now);const m=$('#msg');m.textContent=t;m.className='t'+(hot?' hot':'')}
- svg.classList.toggle('frz',mode==='ville'&&C.frenzied(now));
+ if(now>sayT&&!den.game&&!den.wash){const[t,hot]=C.humeur(now);const m=$('#msg');m.textContent=t;m.className='t'+(hot?' hot':'')}
+ svg.classList.toggle('frz',mode==='ville'&&C.frenzied(now));svg.classList.toggle('dort',mode==='taniere'&&!!S.sleep);
  glow();bar()}
 function bar(){const S=C.S,el=$('#bar');if(!S||S.stage===0||S.dead){if(barKey!=='-'){barKey='-';el.innerHTML=''}return}
- const pret=mode==='ville'&&S.rage>=80&&!S.sleep,key=[mode,S.sleep,S.stage,pret].join();if(key===barKey)return;barKey=key;
+ const pret=mode==='ville'&&S.rage>=80&&!S.sleep,key=[mode,S.sleep,S.stage,pret,!!den.wash].join();if(key===barKey)return;barKey=key;
  const b=(a,ic,l,c='')=>`<button data-a="${a}" class="t ${c}"><i>${A.icon(ic)}</i><span>${l}</span></button>`;
- el.innerHTML=mode==='ville'
+ el.innerHTML=den.wash?b('laver','laver','Terminer','hot'):mode==='ville'
   ?b('rentrer','rentrer','Rentrer')+(pret?b('rugir','rugir','Déchaîner','hot grand bat'):b('rugir','rugir','Rugir','grand'))+(S.stage>=C.MIN.bld?b('frapper','frapper','Frapper'):b('frapper','frapper','Écraser'))
   :(S.sleep?b('dormir','reveil','Réveiller'):b('dormir','dormir','Dormir'))+b('laver','laver','Laver')+b('jouer','jouer','Jouer')+b('rugir','rugir','Rugir')+b('sortir','sortir','Sortir','hot')}
-function build(){const S=C.S;shown=S.stage;ents=[];mon.tgt=null;mon.tx=null;mon.combo=0;den.game=null;if(mode==='ville')buildVille();else buildDen()}
+function build(){const S=C.S;shown=S.stage;ents=[];mon.tgt=null;mon.tx=null;mon.combo=0;den.game=null;den.wash=null;svg.classList.remove('wash');if(mode==='ville')buildVille();else buildDen()}
 
 /* ---------- la tanière ---------- */
 function buildDen(){const S=C.S,now=Date.now(),st=C.stats(now),sp=A.SP[S.sp];
@@ -83,12 +84,18 @@ function buildDen(){const S=C.S,now=Date.now(),st=C.stats(now),sp=A.SP[S.sp];
  <rect y="262" width="300" height="100" fill="#050709"/>
  <g stroke="#55616f" stroke-width=".7" opacity=".4"><path d="M70,270h44M130,268h44M200,276h30M170,290h40M190,308h30M82,300h26"/></g>
  <ellipse cx="150" cy="340" rx="70" ry="9" fill="${sp.c}" opacity=".16" filter="url(#b5)"/>
+ <rect id="nuit" width="300" height="420" fill="#020304" pointer-events="none"/>
  <g id="mon"></g><g id="pluie">${A.rain(4,300,420,170,.5)}</g>
  <path fill-rule="evenodd" fill="#020304" d="M0,0H300V420H0ZM32,338C8,210 50,44 150,34C250,44 292,210 268,338Z"/>
  <path fill="#020304" d="M92,56l6,42l7,-46ZM130,36l5,30l6,-31ZM186,40l6,48l8,-42ZM222,66l4,26l6,-18Z"/>
  <path d="M32,338C8,210 50,44 150,34" fill="none" stroke="#7f8fa3" stroke-width=".8" opacity=".3"/><g id="fx" pointer-events="none"></g>`;
  den.x=den.tx=150;drawMon();place(den.x,338,den.face,DH[S.stage])}
-function upDen(dt,now){const S=C.S;if(S.stage===0||S.sleep||S.dead)return;
+function upDen(dt,now){const S=C.S;if(S.stage===0||S.dead)return;
+ if(S.sleep){   /* il dort : un souffle de buée monte de sa tête à chaque respiration */
+  if(now>den.puffT){den.puffT=now+4200;const fx=$('#fx'),h=DH[S.stage];
+   if(fx)for(let i=0;i<2;i++){const c=document.createElementNS(NS,'circle');c.setAttribute('cx',f(den.x+den.face*h*.32+i*5));c.setAttribute('cy',f(338-h*.76-i*4));c.setAttribute('r',f(3+i*1.5));c.setAttribute('class','souffle');c.style.animationDelay=(i*.45)+'s';fx.appendChild(c);setTimeout(()=>c.remove(),4300)}}
+  return}
+ if(den.wash)return;
  if(den.game){const x=150+90*Math.sin((now-den.game.t0)/1000*3.4);den.game.x=x;const c=$('#curseur');if(c)c.setAttribute('x',f(x-1));if(now-den.game.t0>7000)jeuFin(now);return}
  if(Math.abs(den.tx-den.x)<1){den.wait-=dt;if(den.wait<=0){den.tx=105+Math.random()*90;den.wait=2+Math.random()*5}}
  else{const d=den.tx-den.x;den.face=d>0?1:-1;den.x+=Math.sign(d)*Math.min(Math.abs(d),14*dt)}
@@ -101,6 +108,26 @@ function jeuDebut(now){const S=C.S,sp=A.SP[S.sp],h=DH[S.stage];den.game={t0:now,
 function jeuFin(now){const g=den.game;if(!g)return;den.game=null;const d=Math.abs(g.x-150),q=now-g.t0>7000?0:d<=12?2:d<=34?1:0,r=C.playEnd(q,now);
  anim('hit',420);son('coup');const e=$('#epave g'),v=$('#visee');if(e)e.setAttribute('class','vol'+q);if(v)v.remove();setTimeout(()=>{const x=$('#epave');if(x)x.remove()},850);
  say(['Raté. Il grogne.','Bien visé.','En plein dedans.'][q]);gagne(r.g,1);hud()}
+
+/* le lavage, comme dans Mini-Titan : on frotte le monstre du doigt, la suie s'en va tache par tache */
+function lavDebut(now){const S=C.S,h=DH[S.stage];den.x=den.tx=150;den.face=1;place(150,338,1,h);
+ let s='';for(let i=0,n=Math.ceil((100-S.proprete)/8);i<n;i++)s+=`<circle class="suie" cx="${f(150+(Math.random()-.5)*h*.9)}" cy="${f(338-h*(.12+Math.random()*.72))}" r="${f(3.5+Math.random()*4.5)}"/>`;
+ $('#fx').innerHTML=`<g id="suies">${s}</g><g id="outil" opacity="0"><circle r="12" fill="#6fc3ff" fill-opacity=".16" stroke="#6fc3ff" stroke-width="1.2"/><circle r="3" fill="#bfe6ff"/></g>`;
+ den.wash={p0:S.proprete,acc:0,down:false,lx:0,ly:0,sonT:0,fin:false};svg.classList.add('wash');
+ const m=$('#msg');m.textContent='Frotte-le pour le décrasser.';m.className='t hot';bar()}
+function lavFrotte(p,now){const w=den.wash,S=C.S,h=DH[S.stage],o=$('#outil'),fx=$('#fx');if(!w||w.fin)return;
+ if(o){o.setAttribute('transform',`translate(${f(p.x)},${f(p.y)})`);o.setAttribute('opacity',1)}
+ if(Math.abs(p.x-150)<h*.62&&p.y>338-h-12&&p.y<346)w.acc+=Math.hypot(p.x-w.lx,p.y-w.ly);
+ w.lx=p.x;w.ly=p.y;let pas=false;
+ while(w.acc>=40&&!w.fin){w.acc-=40;pas=true;const plein=C.washStep(2);
+  for(let i=0;i<2;i++){const c=document.createElementNS(NS,'circle');c.setAttribute('cx',f(p.x+(Math.random()-.5)*26));c.setAttribute('cy',f(p.y+(Math.random()-.5)*16));c.setAttribute('r',f(1.2+Math.random()*1.6));c.setAttribute('class','goutte');fx.appendChild(c);setTimeout(()=>c.remove(),950)}
+  const su=$('#suies'),reste=Math.ceil((100-S.proprete)/8);   /* la tache la plus proche du doigt part en premier */
+  while(su&&su.children.length>reste){let best=null,bd=1e9;for(const c of su.children){const d=Math.hypot(+c.getAttribute('cx')-p.x,+c.getAttribute('cy')-p.y);if(d<bd){bd=d;best=c}}best.remove()}
+  if(now-w.sonT>380){w.sonT=now;son('eau')}
+  if(plein){w.fin=true;anim('hop');setTimeout(()=>lavFin(Date.now()),900)}}
+ if(pas)hud()}
+function lavFin(now){const w=den.wash;if(!w)return;den.wash=null;svg.classList.remove('wash');const fx=$('#fx');if(fx)fx.innerHTML='';
+ const r=C.washEnd(C.S.proprete-w.p0,now);say(C.S.proprete>=100?'Il est propre.':'Ça ira pour cette fois.');gagne(r.g,1);hud()}
 
 /* ---------- la ville ---------- */
 function bldSVG(b,i,now){const u=U[C.S.stage],x=b.x*u,w=b.w*u,h=b.h*u,ph=C.phase(b,now),r=A.rng(b.seed),fill=i%2?'#151a21':'#10141a';
@@ -208,8 +235,9 @@ function action(a){const S=C.S,now=Date.now();
  if(a==='fermer')return $('#voile').classList.remove('on');
  if(a==='nouveau'){if(S&&!S.dead&&!confirm('Recommencer ? '+S.name+' sera perdu et tu choisiras un nouvel œuf.'))return;C.reset();return accueil()}
  if(!S||den.game)return;
- if(a==='dormir'){const r=C.sleep(!S.sleep);if(!r.ok)return say(r.why);return hud()}
- if(a==='laver'){const r=C.wash(now);if(!r.ok)return say(r.why);svg.classList.add('wash');setTimeout(()=>svg.classList.remove('wash'),1800);say('La pluie le rince.');gagne(r.g,1);return hud()}
+ if(den.wash){lavFin(now);if(a==='laver')return}
+ if(a==='dormir'){const r=C.sleep(!S.sleep);if(!r.ok)return say(r.why);den.puffT=0;return hud()}
+ if(a==='laver'){const r=C.washCan();if(!r.ok)return say(r.why);return lavDebut(now)}
  if(a==='jouer'){const r=C.playCan(now);if(!r.ok)return say(r.why);return jeuDebut(now)}
  if(a==='rugir'){const ville=mode==='ville',r=C.roar(now,ville);if(!r.ok)return say(r.why);rugit();anim('roar',720);
   if(ville){const u=U[S.stage],c=S.city;ring(mon.x*u+mon.face*MH[S.stage]*.3,GY-MH[S.stage]*.8);shake();
@@ -239,6 +267,7 @@ function mort(){const S=C.S;if($('#voile').classList.contains('on'))return;
 document.addEventListener('click',e=>{const sp=e.target.closest('[data-sp]');if(sp)return fiche(+sp.dataset.sp);const b=e.target.closest('[data-a]');if(b)action(b.dataset.a)});
 svg.addEventListener('pointerdown',e=>{const S=C.S;if(!S||ecran!=='jeu')return;const now=Date.now();
  if(mode==='taniere'){
+  if(den.wash){const p=pt(e);den.wash.down=true;den.wash.lx=p.x;den.wash.ly=p.y;lavFrotte(p,now);try{svg.setPointerCapture(e.pointerId)}catch(x){}return}
   if(den.game)return jeuFin(now);
   if(S.stage===0&&e.target.closest('[data-oeuf]')){C.tapEgg(now);if(S.stage>0){build();say('Il est né.',3500);rugit()}else drawMon();hud()}
   else if(S.stage>0&&e.target.closest('#mg')&&!S.sleep&&!S.dead)anim('hop');
@@ -249,6 +278,9 @@ svg.addEventListener('pointerdown',e=>{const S=C.S;if(!S||ecran!=='jeu')return;c
  else if(t&&t.dataset.p&&!S.city.props[+t.dataset.p].s)mon.tgt={k:'p',id:+t.dataset.p};
  else if(t&&t.dataset.b&&S.city.b[+t.dataset.b].s<3&&(S.stage>=C.MIN.bld||pt(e).y<GY-8))mon.tgt={k:'b',id:+t.dataset.b};
  else{mon.tgt=null;mon.tx=pt(e).x/u+cam}});
+svg.addEventListener('pointermove',e=>{if(den.wash&&den.wash.down)lavFrotte(pt(e),Date.now())});
+const leve=()=>{if(den.wash){den.wash.down=false;const o=$('#outil');if(o)o.setAttribute('opacity',0)}};
+svg.addEventListener('pointerup',leve);svg.addEventListener('pointercancel',leve);
 function pt(e){const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(svg.getScreenCTM().inverse())}
 
 /* ---------- boucles ---------- */
@@ -268,10 +300,12 @@ $('[data-a="journal"]').innerHTML=A.icon('journal');
 const q=new URLSearchParams(location.search),dm=q.get('demo');
 if(dm){const st={oeuf:0,bebe:1,enfant:2,ado:3,titan:4}[dm];
  C.demo({stage:st==null?3:st,sp:+(q.get('sp')||0),ruines:q.get('ruines')==='1',faim:q.get('faim')!=null?+q.get('faim'):null,rage:q.get('rage')!=null?+q.get('rage'):null});
- jouer();if(q.get('ecran')==='ville'&&C.S.stage>0){mode='ville';mon.x=+(q.get('x')||40);build();hud()}}
+ jouer();if(q.get('ecran')==='ville'&&C.S.stage>0){mode='ville';mon.x=+(q.get('x')||40);build();hud()}
+ else if(q.get('etat')==='dort'&&C.S.stage>0){C.S.energie=40;C.S.sleep=true;hud()}
+ else if(q.get('etat')==='lave'&&C.S.stage>0){C.S.proprete=35;lavDebut(Date.now())}}
 else if(q.get('ecran')==='accueil'){C.nosave=true;accueil()}
 else if(C.load()){C.advance(Date.now());jouer();if(C.S.dead)mort()}
 else accueil();
 requestAnimationFrame(frame);
-TV.ui={step,lent,action,spawn,mon,den,jeuFin,get ents(){return ents},get mode(){return mode},get cam(){return cam}};
+TV.ui={step,lent,action,spawn,mon,den,jeuFin,lavFrotte,lavFin,get ents(){return ents},get mode(){return mode},get cam(){return cam}};
 })();
