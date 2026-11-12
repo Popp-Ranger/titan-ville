@@ -92,4 +92,5 @@ main{flex:1;min-height:0;position:relative;border-block:1px solid var(--trait)}
 #panneau p{color:#a3abb5;font-size:14px}
 #panneau .vide{color:var(--acier);font-size:13px;padding:14px 0}
 #panneau .bilan{font-size:11px;color:var(--acier);margin:10px 0 16px}
-.petit{background:none;border:0;color:var(--acier);font-size:10.5px;padding:14px 0;cursor:pointer;display:block}
+.gros.sec{border-color:var(--bord);color:var(--os);margin:0 0 6px}
+#panneau h3{margin:22px 0 4px;font-size:11px;color:var(--acier)}

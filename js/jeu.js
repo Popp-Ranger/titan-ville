@@ -172,7 +172,7 @@ function action(a){const S=C.S,now=Date.now();
  if(a==='couver'){C.start(choix,($('#nom').value||'').trim().slice(0,14)||C.PRENOMS[0]);return jouer()}
  if(a==='journal')return journal();
  if(a==='fermer')return $('#voile').classList.remove('on');
- if(a==='nouveau'){if(S&&!S.dead&&!confirm('Abandonner '+S.name+' et recommencer avec un nouvel œuf ?'))return;C.reset();return accueil()}
+ if(a==='nouveau'){if(S&&!S.dead&&!confirm('Recommencer ? '+S.name+' sera perdu et tu choisiras un nouvel œuf.'))return;C.reset();return accueil()}
  if(!S)return;
  if(a==='dormir'){C.sleep(!S.sleep);bar();hud();return}
  if(a==='laver'){const r=C.wash(now);if(!r.ok)return say(r.why);svg.classList.add('wash');setTimeout(()=>svg.classList.remove('wash'),1800);say('La pluie le rince.');return hud()}
@@ -190,9 +190,10 @@ function action(a){const S=C.S,now=Date.now();
   else c.props.forEach((p,i)=>{const d=Math.abs(p.x-mon.x);if(!p.s&&S.stage>=C.MIN[p.k]&&d<bd){bd=d;best={k:'p',id:i}}});
   if(best)mon.tgt=best;else say('Rien à casser pour l\'instant.')}}
 function journal(){const S=C.S;if(!S)return;const now=Date.now(),e=S.eaten,jr=t=>S.hatch?'Jour '+(Math.floor((t-S.hatch)/864e5)+1)+' · '+hhmm(t):hhmm(t);
- $('#panneau').innerHTML=`<h2 class="t">Journal</h2><div class="bilan t">${S.name} · ${e.hum} passants · ${e.car} voitures · ${e.boat} bateaux · ${e.heli} hélicoptères · ${e.bld} immeubles</div>`
+ $('#panneau').innerHTML=`<h2 class="t">${S.name}</h2><div class="bilan t">${e.hum} passants · ${e.car} voitures · ${e.boat} bateaux · ${e.heli} hélicoptères · ${e.bld} immeubles</div>`
+  +`<button class="gros sec t" data-a="nouveau">Recommencer son personnage</button><h3 class="t">Journal</h3>`
   +(S.log.length?S.log.map(l=>`<div class="ligne"><span class="t">${jr(l.t)}</span>${l.x}</div>`).join(''):'<div class="vide">Aucune dépêche pour l\'instant.</div>')
-  +`<button class="gros t" data-a="fermer">Fermer</button><button class="petit t" data-a="nouveau">Abandonner et recommencer</button>`;
+  +`<button class="gros t" data-a="fermer">Fermer</button>`;
  $('#voile').classList.add('on');$('#voile').scrollTop=0}
 function mort(){const S=C.S;if($('#voile').classList.contains('on'))return;
  $('#panneau').innerHTML=`<h2 class="t">${S.name} s'est éteint</h2><p>Jour ${C.jour(S.last)}. Il a eu faim trop longtemps. Sa lueur est partie d'un coup, sans bruit.</p><p>${S.city.name} rallume ses fenêtres une à une.</p><button class="gros t" data-a="nouveau">Un nouvel œuf</button>`;
