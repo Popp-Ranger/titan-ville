@@ -88,6 +88,12 @@ core.advance=function(now){const S=core.S;if(!S)return false;
  return false};
 
 core.jour=function(now){const S=core.S;return S.stage===0?0:Math.floor((now-S.hatch)/1000/DAY)+1};
+/* progression vers le stade suivant : p de 0 à 1, next = nom du stade à venir (null au Titan), reste en secondes */
+core.evol=function(now){const S=core.S;
+ if(S.stage===0)return{p:Math.min(1,Math.max(S.taps/12,(now-S.born)/90000)),next:STN[1],reste:null};
+ if(S.stage>=4)return{p:1,next:null,reste:0};
+ const age=(now-S.hatch)/1000,a=AGE[S.stage],b=AGE[S.stage+1];
+ return{p:Math.max(0,Math.min(1,(age-a)/(b-a))),next:STN[S.stage+1],reste:Math.max(0,b-age)}};
 core.busy=function(){const S=core.S;return S.dead?'Il ne bouge plus.':S.sleep?'Il dort.':S.energie<5?'Il est épuisé. Il doit dormir.':''};
 
 core.eat=function(type,n){const S=core.S,w=core.busy();if(w)return{ok:0,why:w};

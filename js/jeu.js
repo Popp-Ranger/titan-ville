@@ -43,7 +43,9 @@ function hud(){const S=C.S;if(!S)return;const now=Date.now(),sp=A.SP[S.sp],st=C.
  if(mode==='ville'){$('#nm').textContent=S.city.name;
   $('#sub').textContent=nb(st.pop)+' habitants · '+(st.wait>0?'rebâtie dans '+(st.wait>=1?Math.ceil(st.wait)+' h':'moins d\'une heure'):Math.round(st.debout*100)+' % debout')}
  else{$('#nm').textContent=S.name;$('#sub').textContent=S.stage===0?'Œuf · '+sp.n:C.STN[S.stage]+' · Jour '+C.jour(now)+' · '+sp.n}
- $('#jauges').innerHTML=S.stage===0?'':JG.map(([k,l,hot])=>{const v=Math.round(S[k]);return `<div class="jg t${hot(v)?' hot':''}"><div>${l}<span>${v}</span></div><u style="--v:${v}%"></u></div>`}).join('');
+ const ev=C.evol(now),dans=s=>s>=86400?Math.floor(s/86400)+' j '+Math.floor(s%86400/3600)+' h':s>=3600?Math.floor(s/3600)+' h '+Math.floor(s%3600/60)+' min':s>=60?Math.ceil(s/60)+' min':'moins d\'une minute';
+ $('#jauges').innerHTML=(S.stage===0?'':JG.map(([k,l,hot])=>{const v=Math.round(S[k]);return `<div class="jg t${hot(v)?' hot':''}"><div>${l}<span>${v}</span></div><u style="--v:${v}%"></u></div>`}).join(''))
+  +`<div class="jg ev t" style="--c:${sp.c}"><div>${S.stage===0?'Éclosion':ev.next?'Évolution · '+ev.next:'Évolution · stade final'}<span>${S.stage===0?Math.round(ev.p*100)+' %':ev.next?'dans '+dans(ev.reste):'Titan'}</span></div><u style="--v:${(ev.p*100).toFixed(1)}%"></u></div>`;
  $('#dep').textContent=S.log[0]?hhmm(S.log[0].t)+' · '+S.log[0].x:'';
  if(now>sayT){const[t,hot]=C.humeur(now);const m=$('#msg');m.textContent=t;m.className='t'+(hot?' hot':'')}
  glow()}
