@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Titan-Ville — les douze espèces</title>
+<style>
+:root{--fond:#06070a;--ardoise:#0d1016;--trait:#171c24;--acier:#75808e;--os:#cfc8b8;--lune:#7f8fa3;--braise:#ff6a2a}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--fond);color:var(--os);font-family:"Segoe UI",system-ui,sans-serif;font-size:15px;line-height:1.55}
+.t{font-family:Bahnschrift,"DIN Condensed","Roboto Condensed","Arial Narrow",sans-serif;text-transform:uppercase;letter-spacing:.14em;font-weight:600}
+.page{max-width:1200px;margin:0 auto;padding:44px 16px 80px}
+h1{margin:6px 0 0;font-size:clamp(30px,5vw,60px);line-height:1;letter-spacing:.1em}
+.sub{font-size:12px;color:var(--lune)}
+.lead{margin:14px 0 30px;color:#979fa9;max-width:60em}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))}
+.card{background:var(--ardoise);border:1px solid var(--trait);border-radius:4px;overflow:hidden}
+.card svg{display:block;width:100%;height:auto;background:#07080a}
+.b{padding:14px 18px 18px}
+.hd{display:flex;align-items:baseline;gap:12px}
+.hd .n{font-size:12px;color:var(--acier)}
+h3{margin:0;font-size:19px}
+.k{font-size:10.5px;margin-top:3px}
+.b p{margin:9px 0 0;font-size:13.5px;color:#a3abb5;line-height:1.5}
+.b p b{color:var(--os);font-weight:600}
+h2{margin:60px 0 14px;font-size:13px;color:var(--braise);display:flex;align-items:center;gap:12px}
+h2:after{content:"";flex:1;height:1px;background:var(--trait)}
+.g3{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.plain{padding:18px;border-left:2px solid var(--braise)}
+.plain h3{font-size:14px;margin-bottom:6px}
+.plain p{margin:0;font-size:13px;color:#979fa9}
+.foot{margin-top:40px;font-size:12px;color:#525a65}
+</style>
+</head>
+<body>
+<svg style="position:absolute;width:0;height:0" aria-hidden="true"><defs>
+<filter id="b2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2"/></filter>
+<filter id="b5" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="5"/></filter>
+<filter id="b12" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="12"/></filter>
+<linearGradient id="pl-braise" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a0c05"/><stop offset=".6" stop-color="#c93d14"/><stop offset="1" stop-color="#ffc98a"/></linearGradient>
+<radialGradient id="fog"><stop offset="0" stop-color="#363e49"/><stop offset=".6" stop-color="#161a20"/><stop offset="1" stop-color="#07080a"/></radialGradient>
+<linearGradient id="gnd" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#55616f" stop-opacity="0"/><stop offset=".5" stop-color="#55616f" stop-opacity=".8"/><stop offset="1" stop-color="#55616f" stop-opacity="0"/></linearGradient>
+<linearGradient id="beamv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0c0" stop-opacity=".5"/><stop offset="1" stop-color="#fff0c0" stop-opacity="0"/></linearGradient>
+<linearGradient id="beamu" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#dfe9f5" stop-opacity=".35"/><stop offset="1" stop-color="#dfe9f5" stop-opacity="0"/></linearGradient>
+</defs></svg>
+
+<div class="page">
+  <div class="t sub">Titan-Ville · planche de recherche</div>
+  <h1 class="t">Les douze espèces</h1>
+  <p class="lead">Le saurien d'origine, les dix nouvelles morphologies et un démon de feu et d'ombre : toutes sont gardées. Le joueur choisit son œuf, et chaque espèce change la façon de manger, de détruire et de s'en occuper.</p>
+  <div class="grid" id="g"></div>
+
+  <h2 class="t">Où on en est</h2>
+  <div class="g3">
+    <div class="card plain"><h3 class="t">Décidé</h3><p>Style « Contre-jour » sombre. Douze espèces jouables. La ville se relève après chaque destruction.</p></div>
+    <div class="card plain"><h3 class="t">Reste à dessiner</h3><p>Chaque espèce n'existe qu'au stade Titan. Il manque l'œuf, le bébé, l'enfant et l'ado de onze d'entre elles.</p></div>
+    <div class="card plain"><h3 class="t">Reste à trancher</h3><p>Le monstre peut-il mourir de ses blessures, et le nom définitif du jeu.</p></div>
+  </div>
+  <p class="foot">Silhouettes au stade Titan uniquement. Les immeubles au pied donnent l'échelle. Rien du jeu n'est développé.</p>
+</div>
+
+<script>
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const f=n=>(+n).toFixed(1);
+const BODY='#020304',RIM='#8898ac',OS='#cfc8b8';
+const grp=(c,el,x='')=>`<g fill="${c}" stroke="${c}" stroke-width="0" stroke-linecap="round" stroke-linejoin="round" ${x}>${el}</g>`;
+const sil=(el,r=1.6,c=BODY)=>grp(RIM,el,`transform="translate(${-r},${-r*.7})"`)+grp(c,el);
+const lum=(el,c,o=.8)=>grp(c,el,`opacity="${o}" filter="url(#b5)"`)+grp(c,el);
+const halo=(el,c,o=.5)=>grp(c,el,`opacity="${o}" filter="url(#b12)"`);
+function sky(seed,x0,x1,base,hmin,hmax,wmin,wmax,fill,win){
+ const r=rng(seed);let x=x0,s='';
+ while(x<x1){const w=wmin+r()*(wmax-wmin),h=hmin+r()*(hmax-hmin),y=base-h;
+  s+=`<rect x="${f(x)}" y="${f(y)}" width="${f(w+.6)}" height="${f(h)}" fill="${fill}"/>`;
+  if(win)for(let yy=y+3;yy<base-3;yy+=5)for(let xx=x+2;xx<x+w-2;xx+=4)if(r()<win)s+=`<rect x="${f(xx)}" y="${f(yy)}" width="1.6" height="2.2" fill="#ffc76b" opacity="${(.3+r()*.5).toFixed(2)}"/>`;
+  x+=w+(r()<.2?r()*6:0);}
+ return s;}
+const bg=`<rect width="320" height="230" fill="#07080a"/><ellipse cx="160" cy="105" rx="200" ry="135" fill="url(#fog)"/>`;
+const gnd=`<rect y="190" width="320" height="40" fill="#020304"/><rect y="190" width="320" height="1" fill="url(#gnd)"/>`;
+const city=(seed,h1=8,h2=30,win=.12)=>sky(seed,0,320,190,h1,h2,7,15,'#14181e',win);
+
+const f2=n=>(+n).toFixed(2),FAR='#1a2029';
+/* le saurien d'origine, même dessin que dans planche-2.html */
+function saurien(){
+ const p={bw:56,bh:88,lh:40,lw:20,hr:15.5,sn:1.2,tl:150,lean:27,np:10,ps:23,eye:.1,teeth:5},c='#ff6a2a',rim=1.4;
+ const rx=p.bw/2,ry=p.bh/2,a=p.lean*Math.PI/180,cy=-(p.lh*.8+ry);
+ const rot=(x,y)=>[x*Math.cos(a)-y*Math.sin(a),cy+x*Math.sin(a)+y*Math.cos(a)];
+ const T0=rot(0,-ry),hc=[T0[0]+p.hr*.55,T0[1]-p.hr*.3];
+ const X=.6+p.sn*1.2,U=[X-.05,-.02],L=[X-.25,.5];
+ const htr=`translate(${f(hc[0])},${f(hc[1])}) rotate(14) scale(${p.hr})`;
+ const head=`<path transform="${htr}" d="M-1,0C-1,-.9 -.1,-1.1 .5,-.85L${f2(X-.2)},-.5C${f2(X+.1)},-.42 ${f2(X+.15)},-.12 ${f2(U[0])},${f2(U[1])}L.7,.14L${f2(L[0])},${f2(L[1])}C${f2(X-.2)},.68 ${f2(X-.5)},.78 ${f2(X-.7)},.74L0,.9C-.7,.92 -1,.5 -1,0ZM-.1,-1L-1.05,-1.5L-.7,-.6ZM-.6,-.75L-1.5,-1L-1,-.3Z"/>`;
+ const neck=`<ellipse transform="translate(${f((T0[0]+hc[0])/2-p.hr*.2)},${f((T0[1]+hc[1])/2+p.hr*.35)}) rotate(${p.lean})" rx="${f(p.hr*.9)}" ry="${f(p.hr*1.15)}"/>`;
+ const S=rot(-rx*.8,ry*.3),bx=-rx*.45,tip=[bx-p.tl,-p.tl*.06];
+ const c1=[S[0]-p.tl*.3,S[1]*.45],c2=[tip[0]+p.tl*.35,tip[1]-p.tl*.1-3];
+ const tail=`<path d="M${f(S[0])},${f(S[1])}C${f(c1[0])},${f(c1[1])} ${f(c2[0])},${f(c2[1])} ${f(tip[0])},${f(tip[1])}C${f(tip[0]+p.tl*.3)},1 ${f(bx-p.tl*.25)},0 ${f(rx*.2)},${f(-p.lh*.3)}Z"/>`;
+ const leg=lx=>`<ellipse cx="${f(lx)}" cy="${f(-p.lh*.78)}" rx="${f(p.lw*.8)}" ry="${f(p.lh*.55)}"/><path d="M${f(lx-p.lw*.5)},${f(-p.lh*.5)}H${f(lx+p.lw*.42)}L${f(lx+p.lw*.5)},${f(-p.lh*.22)}L${f(lx+p.lw*1.2)},${f(-p.lh*.17)}L${f(lx+p.lw*1.8)},0H${f(lx-p.lw*.55)}Z"/>`;
+ const armAt=(px,py,ang)=>{const A=rot(rx*px,-ry*py);return `<path transform="translate(${f(A[0])},${f(A[1])}) rotate(${f(ang)}) scale(${p.bw})" d="M-.14,-.1L.3,.16L.55,.02L.74,0L.62,.08L.8,.12L.63,.16L.74,.26L.52,.2L.32,.36L-.16,.14Z"/>`};
+ const torso=`<ellipse transform="translate(0,${f(cy)}) rotate(${p.lean})" rx="${f(rx)}" ry="${f(ry)}"/>`;
+ const pls=[],n1=p.np,n2=6;
+ for(let i=0;i<n1;i++){const th=(-.6-.62*i/(n1-1))*Math.PI,q=rot(rx*Math.cos(th),ry*Math.sin(th));
+  pls.push([q[0],q[1],Math.atan2(q[1]-cy,q[0])*180/Math.PI+90+(i%3-1)*7,p.ps*(.5+.5*Math.sin(Math.PI*(i+.6)/n1))*(i%2?1.18:.84)]);}
+ const bz=t=>{const u=1-t;return[u*u*u*S[0]+3*u*u*t*c1[0]+3*u*t*t*c2[0]+t*t*t*tip[0],u*u*u*S[1]+3*u*u*t*c1[1]+3*u*t*t*c2[1]+t*t*t*tip[1]]};
+ for(let i=0;i<n2;i++){const t=.16+.5*i/(n2-1),q=bz(t);pls.push([q[0],q[1],-14+(i%2?6:-5),p.ps*(.62-.38*i/(n2-1))]);}
+ const plate=pls.map(q=>{const s=q[3];return `<path transform="translate(${f(q[0])},${f(q[1])}) rotate(${f(q[2])}) translate(0,${f(s*.3)})" d="M${f(-s*.6)},0L${f(-s*.3)},${f(-s*.8)}L${f(-s*.05)},${f(-s*1.6)}L${f(s*.3)},${f(-s*.75)}L${f(s*.6)},0Z"/>`}).join('');
+ let teeth='';
+ for(let i=1;i<=p.teeth;i++){const t=.3+.65*i/p.teeth,v=t-.06;
+  const ux=.7+(U[0]-.7)*t,uy=.14+(U[1]-.14)*t,lx=.7+(L[0]-.7)*v,ly=.14+(L[1]-.14)*v;
+  teeth+=`M${f2(ux-.06)},${f2(uy)}L${f2(ux-.01)},${f2(uy+.17)}L${f2(ux+.05)},${f2(uy)}ZM${f2(lx-.06)},${f2(ly)}L${f2(lx)},${f2(ly-.15)}L${f2(lx+.05)},${f2(ly)}Z`;}
+ const ex=hc[0]+p.hr*.42,ey=hc[1]-p.hr*.3,er=p.hr*p.eye,C=rot(rx*.35,-ry*.05);
+ return `<g fill="${c}" opacity=".75" filter="url(#b5)">${plate}</g><g fill="url(#pl-braise)">${plate}</g>`
+  +sil(tail+leg(-rx*.55)+torso+neck+head+leg(rx*.05)+armAt(.8,.4,p.lean*.4),rim)
+  +`<ellipse cx="${f(C[0])}" cy="${f(C[1])}" rx="${f(rx*.4)}" ry="${f(ry*.5)}" fill="${c}" opacity=".17" filter="url(#b5)"/>`
+  +`<g transform="${htr}"><path d="M.7,.14L${f2(U[0])},${f2(U[1])}L${f2(L[0])},${f2(L[1])}Z" fill="${c}" opacity=".85"/><path d="${teeth}" fill="${OS}"/></g>`
+  +`<circle cx="${f(ex)}" cy="${f(ey)}" r="${f(er*2.2)}" fill="${c}" opacity=".6" filter="url(#b2)"/><ellipse cx="${f(ex)}" cy="${f(ey)}" rx="${f(er*1.25)}" ry="${f(er*.45)}" fill="#ffd9a8" transform="rotate(24 ${f(ex)} ${f(ey)})"/>`;
+}
+const M=[
+{n:"Le Saurien",k:"Bipède à plaques · lueur braise, radium ou spectre",c:"#ff6a2a",
+ d:"Le premier dessiné. Dos voûté, crête, griffes, une rangée de plaques qui rougeoie selon sa forme.",
+ e:"De tout, dans l'ordre : passants, voitures, bateaux, hélicoptères, immeubles.",
+ s:"L'espèce de référence, sans exigence particulière. Trois lignées de lueur au choix.",
+ v:c=>bg+city(11)+gnd+`<g transform="translate(196,190) scale(1.08)">${saurien()}</g>`},
+
+{n:"Le Colosse",k:"Bipède voûté · lueur soufre",c:"#f2d03b",
+ d:"Une brute qui marche sur les poings. Petite tête, épaules énormes, le dos fendu de lumière.",
+ e:"Arrache les toits et puise dedans à pleines mains.",
+ s:"Colérique. Sa rage monte vite : il faut le laisser frapper souvent.",
+ v:c=>bg+city(1)+gnd+sil(`<path d="M118,62L110,36L132,54ZM140,50L146,22L160,48ZM166,50L182,30L184,58Z"/><ellipse cx="118" cy="142" rx="36" ry="34"/><ellipse transform="rotate(-15 150 98)" cx="150" cy="98" rx="64" ry="50"/><path d="M98,140L92,190H134L138,152Z"/><path d="M128,150L130,190H156L150,150Z"/><path d="M150,95C176,118 180,150 178,168L186,190H150V166C146,140 136,126 130,116Z"/><ellipse cx="206" cy="90" rx="21" ry="18"/><path d="M196,96L234,98L229,115L200,112Z"/><path d="M168,82C216,82 234,128 230,164L240,190H196V166C196,140 180,126 160,120Z"/>`)
+  +lum(`<path d="M116,72l14,12l-4,14l16,8M160,60l6,16l14,4M196,128l10,14l-4,16M132,112l10,10" fill="none" stroke-width="2"/><ellipse cx="214" cy="87" rx="4.500" ry="1.8"/>`,c)
+  +`<path d="M206,98l3,-6l3,6ZM215,98l3,-7l3,7ZM224,99l2,-6l3,6Z" fill="${OS}"/>`},
+
+{n:"Le Léviathan",k:"Serpent de mer · lueur radium",c:"#35e0c2",
+ d:"On n'en voit jamais plus que trois anneaux et une tête. Le reste est sous l'eau.",
+ e:"Les bateaux d'abord, puis les ponts, puis les quais.",
+ s:"Vit au port. Ne se salit presque jamais, mais dépérit loin de l'eau.",
+ v:c=>bg+sky(2,0,120,174,6,20,7,14,'#14181e',.12)
+  +lum(`<path d="M138,114L146,82L156,106ZM158,104L168,76L176,106ZM176,110L190,90L190,120ZM58,136L66,114L74,132ZM76,134L86,118L88,140ZM224,124L202,108L226,138ZM232,98L212,80L238,110Z"/>`,c,.7)
+  +sil(`<path d="M6,182C8,150 22,142 32,156" fill="none" stroke-width="6"/><path d="M40,186C46,118 92,118 100,186" fill="none" stroke-width="15"/><path d="M118,186C128,96 186,96 196,186" fill="none" stroke-width="21"/><path d="M222,194C212,130 226,84 258,60" fill="none" stroke-width="23"/><path d="M244,66L258,30L304,42L298,54L272,58L296,68L272,80L250,78Z"/><path d="M252,40L236,16L264,34Z"/>`)
+  +lum(`<path d="M272,58L298,54L296,68Z"/><ellipse cx="270" cy="45" rx="4" ry="1.8"/>`,c)
+  +`<path d="M280,57l2,5l2,-5ZM287,56l2,5l2,-5Z" fill="${OS}"/>`
+  +`<rect y="176" width="320" height="54" fill="#040608"/><rect y="176" width="320" height="1" fill="url(#gnd)"/><g stroke="#55616f" stroke-width=".8" opacity=".5"><path d="M16,184h24M60,190h30M130,186h40M190,192h28M250,186h36M90,200h30M210,204h40"/></g>`
+  +halo(`<ellipse cx="160" cy="188" rx="70" ry="6"/>`,c,.35)
+  +`<path d="M204,176h14l-2,-4h-10Z" fill="#14181e"/><rect x="209" y="168" width="3" height="4" fill="#14181e"/><rect x="210" y="169" width="1.2" height="1.2" fill="#ffc76b"/>`},
+
+{n:"L'Ailé",k:"Volant · lueur spectre",c:"#a78bff",
+ d:"Il ne touche presque jamais le sol. On voit d'abord son ombre passer sur les toits.",
+ e:"Fond sur les hélicoptères et les avions, emporte les voitures.",
+ s:"Dort suspendu, tête en bas. A besoin de voler chaque jour ou il s'étiole.",
+ v:c=>bg+city(3,14,46)+gnd+`<path d="M96,190L150,96L172,100L128,190Z" fill="url(#beamu)"/>`
+  +`<g transform="translate(0,-22)">`+sil(`<path d="M150,96L62,38L18,62L48,72L28,98L64,96L54,124L92,112L96,136L142,114Z"/><path d="M170,96L258,38L302,62L272,72L292,98L256,96L266,124L228,112L224,136L178,114Z"/><ellipse cx="160" cy="108" rx="17" ry="32"/><path d="M148,84L152,58L160,50L168,58L172,84Z"/><path d="M152,60L140,34L157,54ZM168,60L180,34L163,54Z"/><path d="M160,134C166,158 150,170 166,188" fill="none" stroke-width="6"/><path d="M166,186l12,10l-16,2Z"/><path d="M150,132L140,156L146,158L144,168L152,160L156,138ZM170,132L180,156L174,158L176,168L168,160L164,138Z"/>`)
+  +lum(`<path d="M150,97L62,39M150,98L28,98M148,101L54,124M148,105L96,136M170,97L258,39M170,98L292,98M172,101L266,124M172,105L224,136" fill="none" stroke-width="1.2"/><circle cx="155.500" cy="70" r="2"/><circle cx="164.500" cy="70" r="2"/>`,c,.9)+`</g>`},
+
+{n:"La Carapace",k:"Crustacé · lueur rubis",c:"#ff3b4e",
+ d:"Une forteresse sur six pattes. Elle avance de côté et rien ne l'arrête.",
+ e:"Découpe les immeubles à la pince, étage par étage.",
+ s:"Lente et solide. Mue à chaque stade : quelques heures où elle est sans défense.",
+ v:c=>bg+city(4)+gnd+sil(`<path d="M96,118L88,90L108,110ZM128,106L126,76L142,102ZM160,102L160,70L172,102ZM192,104L198,76L204,108ZM220,114L236,90L230,120Z"/><path d="M70,150C70,96 250,96 250,150C250,172 70,172 70,150Z"/><g fill="none" stroke-width="6"><path d="M92,156L58,132L40,190M106,162L78,144L66,190M122,165L102,154L94,190M228,156L262,132L280,190M214,162L242,144L254,190M198,165L218,154L226,190"/></g><path d="M238,138L272,112L282,84" fill="none" stroke-width="10"/><path d="M268,90L278,38L302,58L290,68L306,76L290,94Z"/><path d="M82,138L50,122L38,100" fill="none" stroke-width="9"/><path d="M24,106L28,60L46,76L38,86L54,92L42,110Z"/><path d="M146,112L142,90M174,112L178,90" fill="none" stroke-width="3.5"/>`)
+  +lum(`<circle cx="142" cy="88" r="3.4"/><circle cx="178" cy="88" r="3.4"/><path d="M142,146v9M151,146v9M160,146v9M169,146v9M178,146v9" fill="none" stroke-width="2.2"/>`,c)
+  +grp(c,`<path d="M84,140C120,124 200,124 236,140" fill="none" stroke-width="1.1"/>`,'opacity=".6"')},
+
+{n:"Le Faucheux",k:"Échassier · lueur fanal",c:"#fff0c0",
+ d:"Un corps minuscule perché sur six pattes démesurées. Il enjambe les immeubles sans les toucher.",
+ e:"Pêche les passants un par un, à la lumière de son fanal.",
+ s:"Fragile et silencieux. Dort beaucoup, craint le vent et les explosions.",
+ v:c=>bg+sky(5,0,320,190,26,74,10,20,'#14181e',.14)+gnd
+  +`<path d="M164,126L132,190H198Z" fill="url(#beamv)"/>`
+  +sil(`<g fill="none" stroke-width="3.6"><path d="M142,62L74,40L28,190M146,58L96,16L66,190M150,62L122,30L110,190M178,62L246,40L292,190M174,58L224,16L254,190M170,62L198,30L212,190"/></g><ellipse cx="160" cy="58" rx="27" ry="15"/><path d="M146,46L150,28L156,44ZM164,44L171,26L174,46Z"/><path d="M150,68L160,92L170,68Z"/><path d="M160,88C160,102 167,108 164,121" fill="none" stroke-width="1.6"/>`,1.3)
+  +halo(`<circle cx="164" cy="125" r="14"/>`,c,.6)+lum(`<circle cx="164" cy="125" r="3.6"/>`,c)
+  +grp(OS,`<circle cx="148" cy="60" r="1.3"/><circle cx="154" cy="62" r="1.3"/><circle cx="166" cy="62" r="1.3"/><circle cx="172" cy="60" r="1.3"/>`)
+  +sky(15,0,320,190,6,18,8,16,'#020304',0)},
+
+{n:"L'Abyssal",k:"Céphalopode · lueur corail",c:"#ff5ab4",
+ d:"Remonté de très profond. Un seul œil, des bras partout dans les rues.",
+ e:"Glisse ses bras entre les immeubles et ramène tout ce qui bouge.",
+ s:"Doit rester humide. La propreté devient une jauge d'eau : au sec, il souffre.",
+ v:c=>bg+city(6)+gnd+sil(`<path d="M122,124C104,56 140,18 176,18C218,18 240,70 216,124Z"/><g fill="none"><path d="M134,118C108,150 80,152 58,190" stroke-width="11"/><path d="M150,122C140,158 120,170 118,190" stroke-width="10"/><path d="M168,124C172,160 160,176 172,190" stroke-width="10"/><path d="M186,122C200,150 206,172 224,190" stroke-width="10"/><path d="M202,116C236,128 250,158 280,148C296,142 296,124 284,124" stroke-width="8"/><path d="M126,110C92,110 72,88 50,98C36,106 40,122 52,120" stroke-width="7"/></g>`)
+  +lum(`<circle cx="192" cy="86" r="8"/>`,c)+`<ellipse cx="192" cy="86" rx="1.9" ry="6.6" fill="${BODY}"/>`
+  +lum(`<circle cx="150" cy="50" r="2.4"/><circle cx="163" cy="37" r="2"/><circle cx="140" cy="72" r="2"/><circle cx="178" cy="33" r="1.7"/><circle cx="206" cy="54" r="2"/><circle cx="132" cy="96" r="1.6"/><circle cx="98" cy="150" r="1.6"/><circle cx="83" cy="163" r="1.5"/><circle cx="70" cy="176" r="1.4"/><circle cx="250" cy="149" r="1.5"/><circle cx="268" cy="150" r="1.4"/><circle cx="200" cy="158" r="1.5"/><circle cx="210" cy="174" r="1.4"/>`,c,.7)},
+
+{n:"Le Bélier",k:"Quadrupède cuirassé · lueur ambre",c:"#ffb03a",
+ d:"Bas, large, blindé. Une corne à l'avant, une masse au bout de la queue.",
+ e:"Charge à travers les immeubles et mange ce qui tombe.",
+ s:"Gros appétit, sommeil de plomb. Le plus simple à élever, le plus long à rassasier.",
+ v:c=>bg+city(7,6,22)+gnd+sil(`<path d="M92,104L98,78L110,100ZM116,96L126,68L136,94ZM144,92L156,64L164,92ZM174,94L188,70L192,98ZM202,100L218,82L216,106Z"/><path d="M66,152C64,106 118,90 170,92C216,94 244,110 248,142L248,152Z"/><path d="M84,146L80,190H112L114,150Z"/><path d="M118,150V190H142L144,150Z"/><path d="M186,150V190H212L214,150Z"/><path d="M216,148L222,190H248L244,144Z"/><path d="M236,116L276,124L296,138L290,152L262,158L238,152Z"/><path d="M270,126L300,96L286,134Z"/><path d="M252,120L268,96L264,124Z"/><path d="M74,134C50,128 40,140 28,126" fill="none" stroke-width="9"/><circle cx="24" cy="124" r="10"/><path d="M14,118L2,106L20,114ZM18,134L4,144L24,134ZM28,114L30,98L35,116Z"/>`)
+  +lum(`<path d="M98,114C130,102 190,102 228,116M108,130C140,121 190,121 224,132" fill="none" stroke-width="1.5"/><ellipse cx="270" cy="137" rx="3.6" ry="1.6"/>`,c,.75)},
+
+{n:"Le Fourneau",k:"Colosse minéral · lueur braise",c:"#ff6a2a",
+ d:"Des blocs de pierre qui tiennent ensemble par la chaleur. On voit le feu entre les joints.",
+ e:"Avale les voitures pour le métal, les immeubles pour la pierre.",
+ s:"S'il a faim, il refroidit et se fige. Le nourrir, c'est entretenir un feu.",
+ v:c=>bg+city(8)+gnd+halo(`<path d="M70,50H252L262,180L200,190H122L60,180Z"/>`,c,.55)+grp('#b3261a',`<path d="M72,52H250L258,178L198,188H124L62,178Z"/>`,'opacity=".55"')+halo(`<ellipse cx="161" cy="120" rx="46" ry="60"/>`,c,.7)
+  +sil(`<path d="M110,190L118,142H155L157,190Z"/><path d="M165,190L167,142H204L212,190Z"/><path d="M108,138H214L204,118H118Z"/><path d="M108,114H214L226,58H96Z"/><path d="M68,52L102,46L98,86L70,82Z"/><path d="M220,46L254,52L252,82L224,86Z"/><path d="M68,86L94,90L90,150L64,146Z"/><path d="M228,90L254,86L258,146L232,150Z"/><path d="M56,152L94,156L92,184L54,180Z"/><path d="M228,156L266,152L268,180L230,184Z"/><path d="M144,54H178L174,26H148Z"/><path d="M76,48L79,22H91L93,46ZM229,46L231,22H243L246,48Z"/>`,1.2)
+  +lum(`<rect x="152" y="37" width="18" height="3"/><path d="M138,74v26M150,74v26M162,74v26M174,74v26M186,74v26" fill="none" stroke-width="3"/>`,c)
+  +halo(`<ellipse cx="85" cy="12" rx="8" ry="8"/><ellipse cx="237" cy="12" rx="8" ry="8"/>`,'#3d434c',.8)},
+
+{n:"La Mante",k:"Insecte · lueur venin",c:"#c9f03a",
+ d:"Deux faux à la place des bras. Elle reste immobile des heures, puis frappe une seule fois.",
+ e:"Tranche les hélicoptères en vol, ouvre les immeubles de haut en bas.",
+ s:"Patiente. Mange rarement mais beaucoup. N'aime pas qu'on la dérange quand elle guette.",
+ v:c=>bg+city(9)+gnd+sil(`<g fill="none" stroke-width="4"><path d="M156,126L176,158L172,190M146,130L124,160L132,190M132,134L98,162L90,190M166,122L200,150L206,190"/></g><ellipse transform="rotate(-16 104 138)" cx="104" cy="138" rx="58" ry="15"/><path d="M148,128L188,58L204,64L172,134Z"/><path d="M186,62L218,36L214,68Z"/><g fill="none" stroke-width="1.5"><path d="M206,44C214,20 234,12 252,20M204,46C206,22 220,8 240,6"/></g><path d="M186,84L222,108" fill="none" stroke-width="6"/><path d="M218,110L246,78L252,82L230,116Z"/><path d="M246,78C270,86 278,108 272,134C266,112 258,100 242,94Z"/><path d="M194,74L232,96" fill="none" stroke-width="7"/><path d="M228,98L262,58L270,62L242,106Z"/><path d="M262,58C292,66 304,98 294,136C288,104 276,86 256,76Z"/>`,1.4)
+  +lum(`<ellipse cx="206" cy="52" rx="4.6" ry="6" transform="rotate(-30 206 52)"/><path d="M263,59C292,67 303,98 294,134" fill="none" stroke-width="1.1"/>`,c)
+  +grp(c,`<path d="M150,124C120,128 80,142 52,154M146,131C120,137 90,149 64,159" fill="none" stroke-width="1.1"/>`,'opacity=".65"')},
+
+{n:"Le Voile",k:"Flottant · lueur givre",c:"#bfe6ff",
+ d:"Il dérive au-dessus des toits sans un bruit. Ni gueule, ni yeux, seulement des filaments.",
+ e:"Ses filaments ramassent ce qui brille. Les quartiers s'éteignent sur son passage.",
+ s:"Pas de rage, pas de cris. Il a besoin d'orages : on le sort quand il pleut.",
+ v:c=>bg+sky(10,0,320,190,10,34,7,15,'#14181e',.04)+gnd
+  +sil(`<g fill="none"><path d="M110,94C98,130 122,150 108,184" stroke-width="3"/><path d="M126,96C134,130 116,156 130,188" stroke-width="2.5"/><path d="M144,98C136,138 156,160 146,186" stroke-width="3"/><path d="M160,100C166,140 150,166 162,188" stroke-width="2.5"/><path d="M176,98C186,134 166,158 178,186" stroke-width="3"/><path d="M194,96C188,130 208,152 196,188" stroke-width="2.5"/><path d="M210,94C222,126 202,150 214,182" stroke-width="3"/><path d="M150,98C140,120 160,134 152,158" stroke-width="7"/><path d="M170,98C180,120 162,136 170,160" stroke-width="7"/></g><path d="M96,92C96,22 224,22 224,92C206,102 188,86 160,98C132,86 114,102 96,92Z"/>`,1.4)
+  +halo(`<ellipse cx="160" cy="64" rx="44" ry="22"/>`,c,.45)
+  +grp(c,`<g fill="none" stroke-width="1.4"><circle cx="142" cy="62" r="8"/><circle cx="160" cy="56" r="8"/><circle cx="178" cy="62" r="8"/><path d="M104,86C120,60 200,60 216,86"/></g>`,'opacity=".8"')
+  +lum(`<circle cx="108" cy="184" r="1.6"/><circle cx="130" cy="188" r="1.4"/><circle cx="146" cy="186" r="1.6"/><circle cx="162" cy="188" r="1.4"/><circle cx="178" cy="186" r="1.6"/><circle cx="196" cy="188" r="1.4"/><circle cx="214" cy="182" r="1.6"/>`,c,.9)},
+
+{n:"L'Ombre-Braise",k:"Démon de feu et d'ombre · lueur brasier",c:"#ff4a1a",
+ d:"Un seigneur cornu drapé de fumée, des ailes en lambeaux, un fouet de flammes. Le feu lui sort par les fissures du torse.",
+ e:"Ne mâche rien : il embrase, puis aspire ce qui brûle.",
+ s:"Tout ce qu'il touche prend feu, sa tanière comprise. Le laver l'éteint : il déteste ça.",
+ v:c=>bg+city(12)+gnd
+  +halo(`<ellipse cx="160" cy="70" rx="90" ry="50"/>`,'#020304',.8)
+  +sil(`<path d="M140,80L60,24L20,50L44,62L16,88L46,92L28,122L64,116L70,140L130,118Z"/><path d="M180,80L260,24L300,50L276,62L304,88L274,92L292,122L256,116L250,140L190,118Z"/>`,1.4,FAR)
+  +lum(`<path d="M110,74L104,42L120,60L124,34L138,68ZM210,74L216,42L200,60L196,34L182,68ZM149,46L153,18L160,36L167,16L171,46Z"/>`,c,.85)
+  +sil(`<path d="M134,134H159L155,190H126Z"/><path d="M161,134H186L194,190H165Z"/><path d="M122,78H198L188,140H132Z"/><ellipse cx="119" cy="84" rx="20" ry="15"/><ellipse cx="201" cy="84" rx="20" ry="15"/><path d="M146,72L150,46L160,40L170,46L174,72L160,82Z"/><path d="M149,52C127,50 114,30 123,8C128,26 138,36 153,41Z"/><path d="M171,52C193,50 206,30 197,8C192,26 182,36 167,41Z"/>`)
+  +sil(`<path d="M102,86L120,92L113,140L119,170L99,172L91,138Z"/><path d="M200,92L218,86L236,128L226,160L208,160L214,132Z"/>`)
+  +lum(`<path d="M160,88V134M160,98L141,106M160,98L179,106M160,114L145,124M160,114L175,124" fill="none" stroke-width="2"/><path d="M151,58l7,3M169,58l-7,3M154,69h12" fill="none" stroke-width="2.2"/>`,c)
+  +lum(`<path d="M106,170C72,180 38,152 50,128C60,108 86,122 74,140" fill="none" stroke-width="2.6"/>`,'#ffb03a',.9)
+  +grp('#ff8a4a',`<circle cx="92" cy="40" r="1.2"/><circle cx="232" cy="30" r="1"/><circle cx="244" cy="70" r="1.3"/><circle cx="78" cy="96" r="1"/><circle cx="200" cy="20" r="1.1"/><circle cx="128" cy="22" r="1"/><circle cx="262" cy="150" r="1.2"/><circle cx="40" cy="160" r="1"/>`,'opacity=".8"')}
+];
+document.getElementById('g').innerHTML=M.map((m,i)=>`<div class="card"><svg viewBox="0 0 320 230" role="img" aria-label="${m.n}">${m.v(m.c)}</svg><div class="b"><div class="hd"><span class="n t">${String(i+1).padStart(2,'0')}</span><h3 class="t">${m.n}</h3></div><div class="k t" style="color:${m.c}">${m.k}</div><p>${m.d}</p><p><b>Il mange.</b> ${m.e}</p><p><b>À élever.</b> ${m.s}</p></div></div>`).join('');
+</script>
+</body>
+</html>

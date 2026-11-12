@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Titan-Ville — planche de style</title>
+<style>
+:root{--noir:#07090c;--fond:#0b0e13;--ardoise:#131922;--brume:#2a3644;--acier:#7b8a9c;--os:#d9d3c5;--lune:#8fa6c2;--braise:#ff6a2a;--fenetre:#ffc76b}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--fond);color:var(--os);font-family:"Segoe UI",system-ui,sans-serif;font-size:15px;line-height:1.55}
+.t{font-family:Bahnschrift,"DIN Condensed","Roboto Condensed","Arial Narrow",sans-serif;text-transform:uppercase;letter-spacing:.14em;font-weight:600}
+.page{max-width:1200px;margin:0 auto;padding:0 16px 80px}
+.hero{position:relative;margin:0 -16px;overflow:hidden;border-bottom:1px solid #1c2430}
+.hero svg{display:block;width:100%;height:auto}
+.hero .txt{position:absolute;left:4%;top:9%;max-width:46%}
+.hero h1{margin:0;font-size:clamp(30px,6vw,76px);line-height:.95;letter-spacing:.1em}
+.hero .sub{margin-top:10px;font-size:clamp(10px,1.3vw,14px);color:var(--lune)}
+.hero p{margin:14px 0 0;font-size:clamp(12px,1.5vw,17px);color:#c3ccd6;max-width:30em}
+section{margin-top:64px}
+h2{margin:0 0 6px;font-size:13px;color:var(--braise);display:flex;align-items:center;gap:12px}
+h2:after{content:"";flex:1;height:1px;background:#1e2733}
+h2 b{color:var(--acier);font-weight:600}
+.lead{margin:0 0 22px;color:#aab5c2;max-width:62em}
+.grid{display:grid;gap:14px}
+.g3{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.g5{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.card{background:var(--ardoise);border:1px solid #1e2733;border-radius:6px;overflow:hidden}
+.card svg{display:block;width:100%;height:auto;background:#0d1118}
+.card .b{padding:12px 14px 14px}
+.card h3{margin:0;font-size:14px;color:var(--os)}
+.card .k{font-size:10.5px;color:var(--acier);margin-top:2px}
+.card p{margin:8px 0 0;font-size:13px;color:#aab5c2;line-height:1.45}
+.plain{padding:18px 18px 20px}
+.plain h3{margin-bottom:8px}
+.sw{display:flex;flex-wrap:wrap;gap:10px}
+.sw div{flex:1 1 110px;border:1px solid #1e2733;border-radius:6px;overflow:hidden;background:var(--ardoise)}
+.sw i{display:block;height:54px}
+.sw span{display:block;padding:7px 9px 8px;font-size:11px;color:var(--acier)}
+.sw span b{display:block;color:var(--os);font-size:12px;letter-spacing:.1em}
+.typo{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:14px}
+.typo .big{font-size:38px;line-height:1;letter-spacing:.12em}
+.gauge{display:flex;align-items:center;gap:10px;font-size:10px;color:var(--acier);margin-top:10px}
+.gauge u{flex:1;height:2px;background:#26303d;position:relative;text-decoration:none}
+.gauge u:after{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--v);background:var(--c,var(--os))}
+.screens{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:26px;align-items:start}
+.phone{max-width:320px;margin:0 auto;border-radius:34px;padding:9px;background:#05070a;border:1px solid #2a3644;box-shadow:0 30px 60px #0009}
+.phone svg{display:block;width:100%;height:auto;border-radius:26px}
+.cap{max-width:320px;margin:14px auto 0;font-size:13px;color:#aab5c2}
+.cap b{color:var(--os)}
+ul{margin:0;padding-left:18px;color:#aab5c2;font-size:13.5px}
+li{margin:5px 0}
+li b{color:var(--os);font-weight:600}
+.q{border-left:2px solid var(--braise)}
+.foot{margin-top:60px;font-size:12px;color:#5d6b7c}
+</style>
+</head>
+<body>
+
+<svg style="position:absolute;width:0;height:0" aria-hidden="true">
+<defs>
+<filter id="b2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2"/></filter>
+<filter id="b5" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="5"/></filter>
+<filter id="b12" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="12"/></filter>
+<linearGradient id="pl-braise" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a1208"/><stop offset=".55" stop-color="#d9481a"/><stop offset="1" stop-color="#ffd08a"/></linearGradient>
+<linearGradient id="pl-radium" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#06302b"/><stop offset=".55" stop-color="#1fb39b"/><stop offset="1" stop-color="#c9fff2"/></linearGradient>
+<linearGradient id="pl-spectre" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d1440"/><stop offset=".55" stop-color="#7a5cf0"/><stop offset="1" stop-color="#ece4ff"/></linearGradient>
+<linearGradient id="beam" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffd08a" stop-opacity=".55"/><stop offset="1" stop-color="#ffd08a" stop-opacity="0"/></linearGradient>
+<linearGradient id="beamv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dfe9f5" stop-opacity=".5"/><stop offset="1" stop-color="#dfe9f5" stop-opacity="0"/></linearGradient>
+<radialGradient id="fog"><stop offset="0" stop-color="#3a4a5e"/><stop offset=".6" stop-color="#1c2532"/><stop offset="1" stop-color="#0d1118"/></radialGradient>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05070a"/><stop offset=".55" stop-color="#172030"/><stop offset=".85" stop-color="#2b2a30"/><stop offset="1" stop-color="#4a2c1c"/></linearGradient>
+<linearGradient id="mist" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b2533" stop-opacity="0"/><stop offset="1" stop-color="#1b2533" stop-opacity=".95"/></linearGradient>
+<linearGradient id="gnd" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5d7088" stop-opacity="0"/><stop offset=".5" stop-color="#5d7088" stop-opacity=".8"/><stop offset="1" stop-color="#5d7088" stop-opacity="0"/></linearGradient>
+</defs>
+</svg>
+
+<div class="page">
+
+<div class="hero">
+  <div id="hero"></div>
+  <div class="txt">
+    <div class="t sub">Planche de style · direction « Contre-jour »</div>
+    <h1 class="t">Titan-Ville</h1>
+    <p>On l'élève comme un tamagotchi. Il ne se nourrit que de la ville : passants, voitures, bateaux, hélicoptères, puis les immeubles eux-mêmes.</p>
+  </div>
+</div>
+
+<section>
+  <h2 class="t">01 <b>Intention</b></h2>
+  <div class="grid g3">
+    <div class="card plain"><h3 class="t">Contre-jour</h3><p>Tout est silhouette. Le monstre, la ville et les proies sont des masses sombres découpées sur la brume, bordées d'un liseré de lune. Peu de détails, beaucoup d'atmosphère.</p></div>
+    <div class="card plain"><h3 class="t">Une seule couleur vive</h3><p>La lueur du monstre. Ses plaques dorsales et ses yeux sont la seule chose qui brille : c'est aussi la jauge de vie. Bien nourri, il rougeoie. Négligé, il s'éteint.</p></div>
+    <div class="card plain"><h3 class="t">Sérieux, jamais sanglant</h3><p>Le ton vient de l'échelle, du silence et de la nuit. Les humains restent de minuscules silhouettes, avalées d'un trait. Pas de sang, pas de visages.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2 class="t">02 <b>Palette et lettrage</b></h2>
+  <div class="sw">
+    <div><i style="background:#07090c"></i><span><b class="t">Nuit</b>#07090c · fonds, monstre</span></div>
+    <div><i style="background:#131922"></i><span><b class="t">Ardoise</b>#131922 · panneaux</span></div>
+    <div><i style="background:#2a3644"></i><span><b class="t">Brume</b>#2a3644 · lointains</span></div>
+    <div><i style="background:#7b8a9c"></i><span><b class="t">Acier</b>#7b8a9c · texte discret</span></div>
+    <div><i style="background:#8fa6c2"></i><span><b class="t">Lune</b>#8fa6c2 · liserés</span></div>
+    <div><i style="background:#d9d3c5"></i><span><b class="t">Os</b>#d9d3c5 · texte</span></div>
+    <div><i style="background:#ffc76b"></i><span><b class="t">Fenêtre</b>#ffc76b · vie humaine</span></div>
+    <div><i style="background:#ff6a2a"></i><span><b class="t">Braise</b>#ff6a2a · le monstre</span></div>
+  </div>
+  <div class="typo">
+    <div class="card plain"><div class="t big">Titan 09</div><p>Titres et chiffres en capitales étroites, très espacées. Rappelle les marquages industriels et les bandeaux d'alerte.</p></div>
+    <div class="card plain"><h3 class="t">Interface</h3>
+      <div class="gauge t">Faim<u style="--v:34%;--c:#ff6a2a"></u>34</div>
+      <div class="gauge t">Énergie<u style="--v:78%"></u>78</div>
+      <div class="gauge t">Propreté<u style="--v:55%"></u>55</div>
+      <p>Jauges en traits fins, sans bulles ni pictos colorés. La braise ne sert qu'à signaler ce qui demande de l'attention.</p></div>
+    <div class="card plain"><h3 class="t">Son</h3><p>Vent, pluie, sirènes lointaines, pas lourds. Tes quatre rugissements restent, ralentis et plus graves. Pas de musique en boucle : un silence qui se remplit quand la ville panique.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2 class="t">03 <b>Le monstre, de l'œuf au Titan</b></h2>
+  <p class="lead">Même croissance que Mini-Titan, en cinq stades. La caméra recule à chaque stade : ce qui servait de repère de taille devient une proie.</p>
+  <div class="grid g5" id="stades"></div>
+</section>
+
+<section>
+  <h2 class="t">04 <b>Lignées</b></h2>
+  <p class="lead">Les looks de Mini-Titan deviennent des lignées : la silhouette reste sombre, seules la lueur et la forme des plaques changent. Trois exemples.</p>
+  <div class="grid g3" id="lignees"></div>
+</section>
+
+<section>
+  <h2 class="t">05 <b>Au menu</b></h2>
+  <p class="lead">Chaque proie se repère de loin par sa petite lumière : lampe torche, phares, hublots, projecteur, fenêtres.</p>
+  <div class="grid g5" id="menu"></div>
+</section>
+
+<section>
+  <h2 class="t">06 <b>Détruire</b></h2>
+  <p class="lead">Un immeuble tombe en quatre temps. Les fenêtres s'éteignent une à une : la lumière de la ville est son compteur de vie, comme la braise est celui du monstre.</p>
+  <div class="grid g4" id="ruine"></div>
+</section>
+
+<section>
+  <h2 class="t">07 <b>Les deux écrans</b></h2>
+  <div class="screens">
+    <div><div class="phone" id="ph1"></div><p class="cap"><b>La tanière.</b> Une grotte marine sous les falaises, la ville au loin. On y dort, on s'y lave, on y joue, on y rugit. Le bouton « Sortir » mène à la ville.</p></div>
+    <div><div class="phone" id="ph2"></div><p class="cap"><b>La ville.</b> Les cercles marquent ce qui est à portée de gueule ou de patte. L'arc autour de l'immeuble compte les coups. La ville se rebâtit pendant l'absence.</p></div>
+    <div class="grid" style="align-self:center">
+      <div class="card plain"><h3 class="t">Ce qui reste de Mini-Titan</h3><ul>
+        <li><b>Les soins</b> : faim, énergie, propreté, jeu, sommeil</li>
+        <li><b>Le rugissement</b>, qui fait maintenant fuir les humains hors des immeubles</li>
+        <li><b>La croissance lente</b> sur plusieurs jours et les règles douces</li>
+        <li><b>Le monstre qui se promène seul</b></li></ul></div>
+      <div class="card plain"><h3 class="t">Ce qui vient de Kaijuchi</h3><ul>
+        <li><b>Manger dans le décor</b> : aucune gamelle, uniquement des proies</li>
+        <li><b>La ville destructible</b> et la caméra qui recule</li>
+        <li><b>L'échelle des proies</b> selon le stade</li></ul></div>
+      <div class="card plain"><h3 class="t">Ce qui change</h3><ul>
+        <li><b>Fini le jouet vinyle coloré</b> : nuit, brume, silhouettes</li>
+        <li><b>Plus aucun emoji</b> ni bulle : traits fins et capitales</li>
+        <li><b>L'attachement passe par la lueur</b> et les postures, pas par des mimiques</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2 class="t">08 <b>À valider avant de coder</b></h2>
+  <div class="grid g3">
+    <div class="card plain q"><h3 class="t">Le degré de noirceur</h3><p>Cette planche est sombre mais reste lisible et sans violence montrée. Faut-il aller plus loin (ruines qui brûlent longtemps, ville qui ne se relève pas toujours) ou rester&nbsp;ici&nbsp;?</p></div>
+    <div class="card plain q"><h3 class="t">La lueur par défaut</h3><p>Braise, Radium ou Spectre pour le premier monstre ? Les autres deviendraient des lignées à débloquer.</p></div>
+    <div class="card plain q"><h3 class="t">Le nom</h3><p>« Titan-Ville » est provisoire. Pistes plus en accord avec le ton : Contre-jour, Braise, La Couvée, Dernière Ville.</p></div>
+  </div>
+  <p class="foot">Planche de style uniquement. Tous les dessins sont générés dans la page et réutilisables tels quels pour une maquette jouable. Rien du jeu n'est développé.</p>
+</section>
+
+</div>
+
+<script>
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const f=n=>(+n).toFixed(1);
+const ACC={braise:'#ff6a2a',radium:'#35e0c2',spectre:'#a78bff'};
+const ACL={braise:'#ffd9a8',radium:'#d5fff5',spectre:'#f0eaff'};
+const ST={
+ bebe:{bw:34,bh:36,lh:13,lw:12,hr:17,sn:.42,tl:40,lean:5,np:4,ps:7,eye:.2},
+ enfant:{bw:40,bh:52,lh:22,lw:14,hr:16,sn:.75,tl:72,lean:11,np:6,ps:10,eye:.16},
+ ado:{bw:46,bh:68,lh:32,lw:16,hr:15,sn:1,tl:105,lean:16,np:8,ps:14,eye:.13},
+ titan:{bw:60,bh:88,lh:40,lw:21,hr:15.5,sn:1.1,tl:140,lean:20,np:10,ps:20,eye:.11}
+};
+function mon(k,o={}){
+ const p=ST[k],acc=o.acc||'braise',gl=o.glow??1,rim=o.rim??1.6,shape=o.shape||0;
+ const rx=p.bw/2,ry=p.bh/2,a=p.lean*Math.PI/180,cy=-(p.lh*.8+ry);
+ const rot=(x,y)=>[x*Math.cos(a)-y*Math.sin(a),cy+x*Math.sin(a)+y*Math.cos(a)];
+ const T=rot(0,-ry),hc=[T[0]+p.hr*.6,T[1]-p.hr*.45];
+ const X=.6+p.sn*1.2;
+ const head=`<path transform="translate(${f(hc[0])},${f(hc[1])}) rotate(9) scale(${p.hr})" d="M-1,0C-1,-.9 -.1,-1.1 .5,-.85L${f(X-.2)},-.5C${f(X+.1)},-.42 ${f(X+.15)},-.12 ${f(X-.05)},-.02L.75,.12L${f(X-.2)},.3C${f(X-.1)},.5 ${f(X-.4)},.6 ${f(X-.6)},.58L0,.8C-.7,.85 -1,.5 -1,0Z"/>`;
+ const neck=`<ellipse cx="${f((T[0]+hc[0])/2-p.hr*.15)}" cy="${f((T[1]+hc[1])/2+p.hr*.25)}" rx="${f(p.hr*.9)}" ry="${f(p.hr*1.05)}"/>`;
+ const S=rot(-rx*.8,ry*.3),bx=-rx*.45,tip=[bx-p.tl,-p.tl*.06];
+ const c1=[S[0]-p.tl*.3,S[1]*.45],c2=[tip[0]+p.tl*.35,tip[1]-p.tl*.1-3];
+ const tail=`<path d="M${f(S[0])},${f(S[1])}C${f(c1[0])},${f(c1[1])} ${f(c2[0])},${f(c2[1])} ${f(tip[0])},${f(tip[1])}C${f(tip[0]+p.tl*.3)},1 ${f(bx-p.tl*.25)},0 ${f(rx*.2)},${f(-p.lh*.3)}Z"/>`;
+ const leg=lx=>`<ellipse cx="${f(lx)}" cy="${f(-p.lh*.78)}" rx="${f(p.lw*.8)}" ry="${f(p.lh*.55)}"/><path d="M${f(lx-p.lw*.5)},${f(-p.lh*.5)}H${f(lx+p.lw*.42)}L${f(lx+p.lw*.5)},${f(-p.lh*.2)}L${f(lx+p.lw*1.25)},${f(-p.lh*.12)}Q${f(lx+p.lw*1.5)},0 ${f(lx+p.lw*1.25)},0H${f(lx-p.lw*.55)}Z"/>`;
+ const A=rot(rx*.82,-ry*.32);
+ const arm=`<ellipse transform="translate(${f(A[0]+p.bw*.1)},${f(A[1]+p.bw*.09)}) rotate(42)" rx="${f(p.bw*.27)}" ry="${f(p.bw*.085)}"/>`;
+ const torso=`<ellipse transform="translate(0,${f(cy)}) rotate(${p.lean})" rx="${f(rx)}" ry="${f(ry)}"/>`;
+ const shapes=tail+leg(-rx*.55)+torso+neck+head+leg(rx*.05)+arm;
+ // plaques dorsales
+ const pls=[];const n1=p.np,n2=Math.max(2,Math.round(p.np*.6));
+ for(let i=0;i<n1;i++){const th=(-.6-.62*i/(n1-1))*Math.PI,q=rot(rx*Math.cos(th),ry*Math.sin(th));
+  pls.push([q[0],q[1],Math.atan2(q[1]-cy,q[0])*180/Math.PI+90,p.ps*(.5+.5*Math.sin(Math.PI*(i+.6)/n1))]);}
+ const bz=t=>{const u=1-t;return[u*u*u*S[0]+3*u*u*t*c1[0]+3*u*t*t*c2[0]+t*t*t*tip[0],u*u*u*S[1]+3*u*u*t*c1[1]+3*u*t*t*c2[1]+t*t*t*tip[1]]};
+ for(let i=0;i<n2;i++){const t=.16+.5*i/(n2-1),q=bz(t);pls.push([q[0],q[1],-14,p.ps*(.6-.38*i/(n2-1))]);}
+ const pd=s=>shape==1?`M${f(-s*.5)},0Q${f(-s*.6)},${f(-s)} 0,${f(-s*1.3)}Q${f(s*.6)},${f(-s)} ${f(s*.5)},0Z`
+   :shape==2?`M${f(-s*.3)},0L0,${f(-s*1.9)}L${f(s*.3)},0Z`
+   :`M${f(-s*.6)},0L${f(-s*.25)},${f(-s*.85)}L0,${f(-s*1.5)}L${f(s*.35)},${f(-s*.7)}L${f(s*.6)},0Z`;
+ const plate=pls.map(q=>`<path transform="translate(${f(q[0])},${f(q[1])}) rotate(${f(q[2])}) translate(0,${f(q[3]*.3)})" d="${pd(q[3])}"/>`).join('');
+ const ex=hc[0]+p.hr*.5,ey=hc[1]-p.hr*.3,er=p.hr*p.eye;
+ const C=rot(rx*.35,-ry*.05);
+ return `<g>
+ <g fill="${ACC[acc]}" opacity="${f(.75*gl)}" filter="url(#b5)">${plate}</g>
+ <g fill="url(#pl-${acc})" opacity="${f(.45+.55*gl)}">${plate}</g>
+ <g fill="#8fa6c2" transform="translate(${-rim},${-rim*.7})">${shapes}</g>
+ <g fill="#080b10">${shapes}</g>
+ ${o.core?`<ellipse cx="${f(C[0])}" cy="${f(C[1])}" rx="${f(rx*.42)}" ry="${f(ry*.5)}" fill="${ACC[acc]}" opacity="${f(.22*gl)}" filter="url(#b5)"/>`:''}
+ <circle cx="${f(ex)}" cy="${f(ey)}" r="${f(er*2.4)}" fill="${ACC[acc]}" opacity="${f(.6*gl)}" filter="url(#b2)"/>
+ <ellipse cx="${f(ex)}" cy="${f(ey)}" rx="${f(er)}" ry="${f(er*.6)}" fill="${ACL[acc]}" transform="rotate(12 ${f(ex)} ${f(ey)})"/>
+ </g>`;
+}
+function egg(){return `<g>
+ <ellipse cx="-1.5" cy="-31" rx="22" ry="29" fill="#8fa6c2"/><ellipse cx="0" cy="-30" rx="22" ry="29" fill="#080b10"/>
+ <g fill="none" stroke="#ff6a2a" stroke-linejoin="round"><path d="M-9,-52l5,9l-6,7l8,8l-3,9M4,-36l7,5l-2,8l6,6M-4,-28l8,-8" stroke-width="3" opacity=".7" filter="url(#b2)"/>
+ <path d="M-9,-52l5,9l-6,7l8,8l-3,9M4,-36l7,5l-2,8l6,6M-4,-28l8,-8" stroke="#ffd9a8" stroke-width="1"/></g></g>`}
+function sky(seed,x0,x1,base,hmin,hmax,wmin,wmax,fill,win,ws=1){
+ const r=rng(seed);let x=x0,s='';
+ while(x<x1){const w=wmin+r()*(wmax-wmin),h=hmin+r()*(hmax-hmin),y=base-h;
+  s+=`<rect x="${f(x)}" y="${f(y)}" width="${f(w+1)}" height="${f(h)}" fill="${fill}"/>`;
+  if(r()<.25)s+=`<rect x="${f(x+w*.5)}" y="${f(y-h*.12)}" width="${f(1.2*ws)}" height="${f(h*.12)}" fill="${fill}"/>`;
+  if(win)for(let yy=y+5*ws;yy<base-6*ws;yy+=9*ws)for(let xx=x+4*ws;xx<x+w-5*ws;xx+=7*ws)if(r()<win)s+=`<rect x="${f(xx)}" y="${f(yy)}" width="${f(3*ws)}" height="${f(4*ws)}" fill="#ffc76b" opacity="${(.25+r()*.5).toFixed(2)}"/>`;
+  x+=w+(r()<.2?r()*10:0);}
+ return s;}
+function heli(x,y,s,c='#080b10'){return `<g transform="translate(${x},${y}) scale(${s})" fill="${c}"><ellipse rx="9" ry="4.6"/><rect x="-23" y="-1.4" width="17" height="2.2"/><rect x="-25" y="-5.5" width="2.6" height="7"/><rect x="-15" y="-8" width="30" height="1"/><rect x="-.8" y="-7.5" width="1.6" height="4"/><rect x="-6" y="6" width="13" height="1"/><rect x="-3" y="4" width="1" height="2.5"/><rect x="3" y="4" width="1" height="2.5"/><circle cx="-24" cy="-5" r="1.4" fill="#ff3b30"/><ellipse cx="4" cy="-.5" rx="3.4" ry="2.4" fill="#5d7088" opacity=".8"/></g>`}
+function car(x,y,s,c='#080b10'){return `<g transform="translate(${x},${y}) scale(${s})"><path d="M21,-5L62,-9V5L21,-2Z" fill="url(#beam)"/><path d="M-20,0V-6Q-19,-8 -15,-8L-10,-14H6L12,-8H18Q21,-8 21,-4V0Z" fill="${c}"/><path d="M-9,-13H5L10,-8H-13Z" fill="#5d7088" opacity=".55"/><circle cx="-11" cy="0" r="4" fill="#030405"/><circle cx="12" cy="0" r="4" fill="#030405"/><rect x="19" y="-6" width="2" height="2.4" fill="#ffd9a8"/><rect x="-20" y="-6" width="1.5" height="2" fill="#ff3b30"/></g>`}
+function hum(x,y,h,c='#c5cfdb'){const u=h/10;return `<g transform="translate(${x},${y}) scale(${u})" fill="${c}"><circle cx="0" cy="-8.6" r="1.4"/><path d="M-1.3,-7H1.3L1.6,-3.5L2.6,0H1.2L0,-3L-1.4,0H-2.8L-1.5,-3.6Z"/></g>`}
+function tower(x,y,w,h,o={}){const r=rng(o.seed||5);let s=`<rect x="${x}" y="${y-h}" width="${w}" height="${h}" fill="${o.fill||'#1a222e'}"/><rect x="${x}" y="${y-h}" width="1.3" height="${h}" fill="#8fa6c2" opacity=".6"/><rect x="${x}" y="${y-h}" width="${w}" height="1" fill="#8fa6c2" opacity=".35"/>`;
+ for(let yy=y-h+7;yy<y-7;yy+=9)for(let xx=x+5;xx<x+w-6;xx+=8)if(r()<(o.lit??.45))s+=`<rect x="${xx}" y="${yy}" width="4" height="5" fill="#ffc76b" opacity="${(.35+r()*.5).toFixed(2)}"/>`;
+ return s;}
+const rain=(seed,w,h,n,op)=>{const r=rng(seed);let s='';for(let i=0;i<n;i++){const x=r()*w*1.1,y=r()*h,l=10+r()*22;s+=`<path d="M${f(x)},${f(y)}l${f(-l*.28)},${f(l)}"/>`}return `<g stroke="#9db3cc" stroke-width=".7" opacity="${op}">${s}</g>`};
+const fogbg=(w,h,cx,cy,r)=>`<rect width="${w}" height="${h}" fill="#0d1118"/><ellipse cx="${cx}" cy="${cy}" rx="${r}" ry="${r*.8}" fill="url(#fog)"/>`;
+const ground=(w,y)=>`<rect x="0" y="${y}" width="${w}" height="200" fill="#07090c"/><rect x="0" y="${y}" width="${w}" height="1" fill="url(#gnd)"/>`;
+
+/* ---------- image d'ouverture ---------- */
+document.getElementById('hero').innerHTML=`<svg viewBox="0 0 1200 540" role="img" aria-label="Le Titan, silhouette aux plaques rougeoyantes, dans la ville la nuit">
+<rect width="1200" height="540" fill="url(#sky)"/>
+<circle cx="1010" cy="110" r="46" fill="#c9d6e6" opacity=".55" filter="url(#b12)"/><circle cx="1010" cy="110" r="30" fill="#dfe7f0" opacity=".5"/>
+<g fill="#0a0e14" opacity=".8" filter="url(#b12)"><ellipse cx="980" cy="140" rx="170" ry="22"/><ellipse cx="300" cy="90" rx="280" ry="30"/><ellipse cx="700" cy="50" rx="240" ry="24"/></g>
+${sky(11,0,1200,540,150,300,26,60,'#1a2331',0)}
+<rect y="250" width="1200" height="290" fill="url(#mist)" opacity=".7"/>
+<g transform="translate(760,575) scale(3.25)">${mon('titan',{rim:.7,core:1})}</g>
+<rect y="300" width="1200" height="240" fill="url(#mist)"/>
+<g fill="#dfe9f5" opacity=".07"><path d="M330,540L690,150L760,170Z"/><path d="M1090,540L840,120L900,105Z"/></g>
+${sky(23,0,1200,540,70,190,22,48,'#10161f',.22)}
+<ellipse cx="905" cy="520" rx="130" ry="50" fill="#ff6a2a" opacity=".35" filter="url(#b12)"/>
+<g fill="#3a4656" opacity=".6" filter="url(#b12)"><ellipse cx="900" cy="400" rx="50" ry="70"/><ellipse cx="930" cy="300" rx="40" ry="60"/></g>
+${heli(600,118,1.5)}${heli(1075,225,1.1)}
+<path d="M604,124L700,205L672,222Z" fill="url(#beamv)" opacity=".5"/>
+${sky(37,0,1200,540,24,100,30,70,'#06080b',.1)}
+<path d="M860,540V470l8,-14l10,9l7,-18l12,22l9,-6l6,20V540Z" fill="#06080b"/>
+${rain(5,1200,540,260,.16)}
+</svg>`;
+
+/* ---------- stades ---------- */
+const stades=[
+ ['Œuf','Jour 0','Il se fissure de l\'intérieur. La lueur filtre déjà.',`<g transform="translate(110,172)">${egg()}</g>${hum(160,172,16)}`],
+ ['Bébé','Jours 1 à 2','Mange les passants et les pigeons. Renverse les poubelles.',`<g transform="translate(108,172) scale(1.15)">${mon('bebe',{glow:.45})}</g>${hum(178,172,20)}${hum(190,172,18)}`],
+ ['Enfant','Jours 3 à 5','Mange les voitures. Écrase cabanes et kiosques.',`<g transform="translate(118,172)">${mon('enfant',{glow:.65})}</g>${car(186,172,.75,'#1a222e')}`],
+ ['Ado','Jours 6 à 8','Mange bus, bateaux et hélicoptères. Fait tomber les immeubles.',`${tower(182,172,26,62,{seed:3})}<g transform="translate(128,172) scale(.95)">${mon('ado',{glow:.85,core:1})}</g>${heli(182,60,.6)}`],
+ ['Titan','Jour 9 et après','Avale les foules, les paquebots. Rase des quartiers entiers.',`${sky(8,0,220,172,18,58,10,20,'#1a2331',.25,.6)}<g transform="translate(150,172) scale(.92)">${mon('titan',{core:1})}</g>${sky(9,0,220,176,4,16,8,16,'#07090c',0)}`]
+];
+document.getElementById('stades').innerHTML=stades.map(s=>`<div class="card"><svg viewBox="0 0 220 200">${fogbg(220,200,115,110,120)}${ground(220,172)}${s[3]}</svg><div class="b"><h3 class="t">${s[0]}</h3><div class="k t">${s[1]}</div><p>${s[2]}</p></div></div>`).join('');
+
+/* ---------- lignées ---------- */
+const lig=[['Braise','braise',0,'Plaques en éclats, lueur de forge. La lignée d\'origine.'],['Radium','radium',1,'Plaques arrondies, lueur froide de fond marin.'],['Spectre','spectre',2,'Épines fines, lueur pâle. Presque invisible dans la brume.']];
+document.getElementById('lignees').innerHTML=lig.map(l=>`<div class="card"><svg viewBox="0 0 300 200">${fogbg(300,200,160,105,150)}${ground(300,176)}<g transform="translate(195,176) scale(1.02)">${mon('titan',{acc:l[1],shape:l[2],core:1})}</g></svg><div class="b"><h3 class="t">${l[0]}</h3><p>${l[3]}</p></div></div>`).join('');
+
+/* ---------- menu ---------- */
+const water=y=>`<rect y="${y}" width="140" height="60" fill="#0a0f16"/><g stroke="#5d7088" stroke-width=".8" opacity=".5"><path d="M8,${y+6}h22M50,${y+10}h30M96,${y+5}h26M24,${y+15}h18M78,${y+17}h34"/></g>`;
+const menu=[
+ ['Passants','Dès le bébé','Une bouchée. Ils fuient à la lumière des lampes.',`${ground(140,82)}<path d="M52,74L96,66V80Z" fill="url(#beam)"/>${hum(48,82,17)}${hum(72,82,15)}${hum(88,82,16)}${hum(104,82,14)}`],
+ ['Voitures','Dès l\'enfant','Roulent en file, phares allumés. Se croquent en deux fois.',`${ground(140,82)}${car(52,80,1.25,'#1a222e')}${car(112,80,.7,'#141b25')}`],
+ ['Bateaux','Dès l\'ado','Au port. Il faut entrer dans l\'eau, ce qui lave un peu.',`${water(78)}<path d="M18,70H122L112,84H28Z" fill="#1a222e"/><rect x="18" y="70" width="104" height="1" fill="#8fa6c2" opacity=".6"/><g fill="#232d3a"><rect x="34" y="60" width="16" height="10"/><rect x="52" y="60" width="16" height="10"/><rect x="43" y="50" width="16" height="10"/><rect x="70" y="62" width="14" height="8"/></g><rect x="92" y="48" width="18" height="22" fill="#1a222e"/><g fill="#ffc76b"><rect x="95" y="52" width="3" height="3"/><rect x="100" y="52" width="3" height="3"/><rect x="105" y="52" width="3" height="3"/><rect x="95" y="59" width="3" height="3" opacity=".6"/></g><rect x="100" y="38" width="1.2" height="10" fill="#1a222e"/><circle cx="100.6" cy="37" r="1.5" fill="#ff3b30"/><g fill="#ffc76b" opacity=".25"><rect x="95" y="88" width="13" height="1"/><rect x="97" y="92" width="9" height="1"/></g>`],
+ ['Hélicoptères','Dès l\'ado','Tournent autour de lui. À attraper au vol, au bon moment.',`<path d="M74,42L44,96H96Z" fill="url(#beamv)" opacity=".6"/>${heli(72,36,2.1,'#1a222e')}`],
+ ['Immeubles','Titan','Ne se mangent pas d\'un coup : on les abat, puis on dévore.',`${ground(140,88)}${tower(22,88,24,44,{seed:2,fill:'#141b25'})}${tower(54,88,34,72,{seed:7})}${tower(96,88,22,52,{seed:4,fill:'#141b25'})}<rect x="70" y="6" width="1.2" height="10" fill="#1a222e"/><circle cx="70.6" cy="5" r="1.5" fill="#ff3b30"/>`]
+];
+document.getElementById('menu').innerHTML=menu.map(m=>`<div class="card"><svg viewBox="0 0 140 100">${fogbg(140,100,70,50,80)}${m[3]}</svg><div class="b"><h3 class="t">${m[0]}</h3><div class="k t">${m[1]}</div><p>${m[2]}</p></div></div>`).join('');
+
+/* ---------- destruction ---------- */
+const crack=`<path d="M78,42l-5,16l8,10l-7,14l6,12l-5,16" fill="none" stroke="#05070a" stroke-width="2.2" stroke-linejoin="round"/><path d="M73,58l-10,6M81,68l9,5" stroke="#05070a" stroke-width="1.4"/>`;
+const dust=(x,y,k)=>`<g fill="#55657a" opacity=".55" filter="url(#b5)"><ellipse cx="${x}" cy="${y}" rx="${30*k}" ry="${9*k}"/><ellipse cx="${x+18*k}" cy="${y-8*k}" rx="${14*k}" ry="${8*k}"/><ellipse cx="${x-20*k}" cy="${y-6*k}" rx="${12*k}" ry="${7*k}"/></g>`;
+const ruine=[
+ ['1 · Debout','Toutes les fenêtres allumées. Des silhouettes aux étages.',`${tower(48,132,46,96,{seed:6,lit:.7})}`],
+ ['2 · Fissuré','Premier coup. La moitié des lumières s\'éteint, les habitants sortent.',`${tower(48,132,46,96,{seed:6,lit:.3})}${crack}${dust(70,132,.5)}${hum(104,132,9)}${hum(112,132,8)}${hum(120,132,9)}`],
+ ['3 · Bascule','Il penche et se brise. C\'est le moment de le pousser.',`<g transform="rotate(13 94 132)">${tower(48,132,46,58,{seed:6,lit:.08})}</g><g transform="rotate(31 100 80) translate(14,-4)">${tower(48,78,46,40,{seed:9,lit:0})}</g>${dust(78,132,1)}`],
+ ['4 · Ruines','Reste un tas qui fume. Il se rebâtira en quelques heures.',`<ellipse cx="72" cy="126" rx="34" ry="12" fill="#ff6a2a" opacity=".45" filter="url(#b5)"/><g fill="#55657a" opacity=".5" filter="url(#b5)"><ellipse cx="74" cy="92" rx="13" ry="20"/><ellipse cx="82" cy="58" rx="16" ry="20"/><ellipse cx="94" cy="26" rx="20" ry="16"/></g><path d="M30,132L40,118l8,6l5,-16l9,10l8,-18l7,20l9,-8l6,14l10,-4l8,14Z" fill="#141b25"/><path d="M40,118l8,6l5,-16l9,10l8,-18" fill="none" stroke="#8fa6c2" stroke-width=".8" opacity=".6"/><path d="M68,124l3,-7l3,7Z" fill="#ffd9a8"/>`]
+];
+document.getElementById('ruine').innerHTML=ruine.map(m=>`<div class="card"><svg viewBox="0 0 140 150">${fogbg(140,150,70,80,90)}${ground(140,132)}${m[2]}</svg><div class="b"><h3 class="t">${m[0]}</h3><p>${m[1]}</p></div></div>`).join('');
+
+/* ---------- écrans ---------- */
+const T=(x,y,s,txt,c='#d9d3c5',ls=.14,an='start')=>`<text x="${x}" y="${y}" font-size="${s}" fill="${c}" letter-spacing="${ls}em" text-anchor="${an}" font-family="Bahnschrift,'DIN Condensed','Arial Narrow',sans-serif" font-weight="600">${txt}</text>`;
+const G=(x,y,w,lab,v,hot)=>`${T(x,y,7.5,lab,'#7b8a9c')}${T(x+w,y,7.5,v,hot?'#ff6a2a':'#d9d3c5',.08,'end')}<rect x="${x}" y="${y+5}" width="${w}" height="1.6" fill="#26303d"/><rect x="${x}" y="${y+5}" width="${w*v/100}" height="1.6" fill="${hot?'#ff6a2a':'#d9d3c5'}"/>`;
+const IC={dormir:'M3,-8A8.5,8.5 0 1 0 8,4A6.5,6.5 0 1 1 3,-8Z',laver:'M0,-9C5,-3 6.5,0 6.5,2.5A6.5,6.5 0 0 1 -6.5,2.5C-6.5,0 -5,-3 0,-9Z',jouer:'M0,-8L8,0L0,8L-8,0Z',rugir:'M-8,-3H-4L2,-8V8L-4,3H-8ZM5,-4Q8,0 5,4',sortir:'M-9,8V-1h4v-6h5v9h3v-5h5V8Z'};
+const B=(x,y,ic,lab,hot,r=21)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#0b0e13" fill-opacity=".7" stroke="${hot?'#ff6a2a':'#3a4656'}" stroke-width="1.2"/><path transform="translate(${x},${y})" d="${IC[ic]}" fill="none" stroke="${hot?'#ff6a2a':'#d9d3c5'}" stroke-width="1.4" stroke-linejoin="round"/>${T(x,y+r+13,7,lab,hot?'#ff6a2a':'#7b8a9c',.14,'middle')}`;
+const ret=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="#ff6a2a" stroke-width="1" stroke-dasharray="3 3" opacity=".9"/>`;
+
+document.getElementById('ph1').innerHTML=`<svg viewBox="0 0 300 620">
+<rect width="300" height="620" fill="#0f1620"/>
+<ellipse cx="150" cy="300" rx="170" ry="200" fill="url(#fog)"/>
+<circle cx="212" cy="212" r="15" fill="#dfe7f0" opacity=".45"/><circle cx="212" cy="212" r="24" fill="#c9d6e6" opacity=".3" filter="url(#b5)"/>
+${sky(4,40,270,372,6,26,6,12,'#141c28',.3,.45)}
+<rect x="0" y="372" width="300" height="100" fill="#0a1019"/>
+<g stroke="#5d7088" stroke-width=".7" opacity=".45"><path d="M60,384h30M130,380h44M200,388h30M90,398h26M170,402h40M70,414h36M190,420h30"/></g>
+<ellipse cx="150" cy="470" rx="70" ry="10" fill="#ff6a2a" opacity=".3" filter="url(#b5)"/>
+<g transform="translate(168,466) scale(1.38)">${mon('ado',{core:1,rim:1.2})}</g>
+<path fill-rule="evenodd" fill="#05070a" d="M0,0H300V620H0ZM34,466C10,300 52,138 150,128C246,138 292,300 266,466Z"/>
+<g fill="#05070a"><path d="M92,150l6,42l7,-46ZM130,128l5,30l6,-31ZM186,132l6,48l8,-42ZM222,160l4,26l6,-18Z"/></g>
+<path d="M34,466C10,300 52,138 150,128" fill="none" stroke="#8fa6c2" stroke-width=".8" opacity=".35"/>
+${T(24,50,21,'ORAG')}${T(24,66,8,'ADO · JOUR 6 · LIGNÉE BRAISE','#7b8a9c')}${T(276,50,9,'23:41','#7b8a9c',.1,'end')}
+${G(24,88,116,'FAIM',34,1)}${G(160,88,116,'ÉNERGIE',78)}${G(24,110,116,'PROPRETÉ',55)}${G(160,110,116,'DÉFOULEMENT',62)}
+${T(150,500,8.5,'IL A FAIM. LA VILLE EST RALLUMÉE.','#ff6a2a',.16,'middle')}
+${B(42,548,'dormir','DORMIR')}${B(96,548,'laver','LAVER')}${B(150,548,'jouer','JOUER')}${B(204,548,'rugir','RUGIR')}${B(258,548,'sortir','SORTIR',1)}
+</svg>`;
+
+document.getElementById('ph2').innerHTML=`<svg viewBox="0 0 300 620">
+<rect width="300" height="620" fill="url(#sky)"/>
+${sky(3,0,300,470,170,300,22,40,'#18212e',0)}
+<rect y="250" width="300" height="220" fill="url(#mist)" opacity=".8"/>
+${sky(14,150,300,470,90,170,24,36,'#131a24',.3)}
+${tower(176,470,36,188,{seed:12,lit:.25,fill:'#1c2633'})}
+<path d="M196,290l-6,22l9,16l-8,22l7,18l-5,24" fill="none" stroke="#05070a" stroke-width="2.4" stroke-linejoin="round"/>
+<circle cx="194" cy="360" r="26" fill="#0b0e13" fill-opacity=".88" stroke="#3a4656" stroke-width="2"/><path d="M194,334A26,26 0 0 1 194,386" fill="none" stroke="#ff6a2a" stroke-width="2"/>${T(194,364,10,'2 / 4','#ff6a2a',.08,'middle')}
+<g transform="translate(92,470) scale(1.3)">${mon('ado',{core:1,rim:1.2})}</g>
+<path d="M236,196L210,286H262Z" fill="url(#beamv)" opacity=".45"/>${heli(236,190,1.25)}${ret(236,190,24)}
+<rect y="470" width="300" height="150" fill="#090c11"/><rect y="470" width="300" height="1" fill="#5d7088" opacity=".5"/>
+<g stroke="#3a4656" stroke-width="1.2" stroke-dasharray="12 10"><path d="M0,498H300"/></g>
+${car(232,491,.7,'#1a222e')}${ret(234,487,17)}${car(150,514,.8,'#1a222e')}
+${hum(176,478,7)}${hum(184,479,6)}${hum(262,478,7)}${hum(270,479,6)}${hum(278,478,7)}${ret(270,475,13)}
+${rain(9,300,620,90,.14)}
+<rect width="300" height="130" fill="#07090c" opacity=".55"/>
+${T(24,50,21,'LA VILLE')}${T(24,66,8,'72 % DEBOUT · REBÂTIE DANS 3 H 10','#7b8a9c')}${T(276,50,9,'23:47','#7b8a9c',.1,'end')}
+${G(24,88,116,'FAIM',41,1)}${G(160,88,116,'DÉFOULEMENT',70)}
+${T(24,116,7.5,'CE SOIR : 6 PASSANTS · 2 VOITURES · 1 HÉLICOPTÈRE','#7b8a9c')}
+${B(150,556,'rugir','RUGIR',1,27)}${B(52,560,'sortir','RENTRER',0,19)}${B(248,560,'jouer','FRAPPER',0,19)}
+</svg>`;
+</script>
+</body>
+</html>

@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Titan-Ville — planche de style 2, plus sombre</title>
+<style>
+:root{--noir:#020304;--fond:#06070a;--ardoise:#0d1016;--trait:#171c24;--cendre:#3b4048;--acier:#75808e;--os:#cfc8b8;--lune:#7f8fa3;--braise:#ff6a2a;--incendie:#b3261a}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--fond);color:var(--os);font-family:"Segoe UI",system-ui,sans-serif;font-size:15px;line-height:1.55}
+.t{font-family:Bahnschrift,"DIN Condensed","Roboto Condensed","Arial Narrow",sans-serif;text-transform:uppercase;letter-spacing:.14em;font-weight:600}
+.page{max-width:1200px;margin:0 auto;padding:0 16px 80px}
+.hero{position:relative;margin:0 -16px;overflow:hidden;border-bottom:1px solid var(--trait)}
+.hero svg{display:block;width:100%;height:auto}
+.hero .txt{position:absolute;left:4%;top:9%;max-width:44%}
+.hero h1{margin:0;font-size:clamp(30px,6vw,76px);line-height:.95;letter-spacing:.1em}
+.hero .sub{margin-top:10px;font-size:clamp(10px,1.3vw,14px);color:var(--lune)}
+.hero p{margin:14px 0 0;font-size:clamp(12px,1.5vw,17px);color:#aeb4bb;max-width:28em}
+section{margin-top:64px}
+h2{margin:0 0 6px;font-size:13px;color:var(--braise);display:flex;align-items:center;gap:12px}
+h2:after{content:"";flex:1;height:1px;background:var(--trait)}
+h2 b{color:var(--acier);font-weight:600}
+.lead{margin:0 0 22px;color:#979fa9;max-width:62em}
+.grid{display:grid;gap:14px}
+.g3{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.g5{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.card{background:var(--ardoise);border:1px solid var(--trait);border-radius:4px;overflow:hidden}
+.card svg{display:block;width:100%;height:auto;background:#07080a}
+.card .b{padding:12px 14px 14px}
+.card h3{margin:0;font-size:14px;color:var(--os)}
+.card .k{font-size:10.5px;color:var(--acier);margin-top:2px}
+.card p{margin:8px 0 0;font-size:13px;color:#979fa9;line-height:1.45}
+.plain{padding:18px 18px 20px}
+.plain h3{margin-bottom:8px}
+.sw{display:flex;flex-wrap:wrap;gap:10px}
+.sw div{flex:1 1 110px;border:1px solid var(--trait);border-radius:4px;overflow:hidden;background:var(--ardoise)}
+.sw i{display:block;height:54px}
+.sw span{display:block;padding:7px 9px 8px;font-size:11px;color:var(--acier)}
+.sw span b{display:block;color:var(--os);font-size:12px;letter-spacing:.1em}
+.disp{margin-top:14px;padding:18px 20px}
+.disp div{display:flex;gap:16px;padding:7px 0;border-top:1px solid var(--trait);font-size:13px;color:var(--os)}
+.disp div:first-of-type{border-top:0}
+.disp div span{flex:0 0 118px;color:var(--acier);font-size:11px;padding-top:2px}
+.disp div.last{color:var(--braise)}
+.screens{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:26px;align-items:start}
+.phone{max-width:320px;margin:0 auto;border-radius:34px;padding:9px;background:#020304;border:1px solid #232830;box-shadow:0 30px 60px #000c}
+.phone svg{display:block;width:100%;height:auto;border-radius:26px}
+.cap{max-width:320px;margin:14px auto 0;font-size:13px;color:#979fa9}
+.cap b{color:var(--os)}
+ul{margin:0;padding-left:18px;color:#979fa9;font-size:13.5px}
+li{margin:5px 0}
+li b{color:var(--os);font-weight:600}
+.q{border-left:2px solid var(--braise)}
+.foot{margin-top:60px;font-size:12px;color:#525a65}
+</style>
+</head>
+<body>
+
+<svg style="position:absolute;width:0;height:0" aria-hidden="true">
+<defs>
+<filter id="b2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2"/></filter>
+<filter id="b5" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="5"/></filter>
+<filter id="b12" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="12"/></filter>
+<filter id="b24" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="24"/></filter>
+<linearGradient id="pl-braise" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a0c05"/><stop offset=".6" stop-color="#c93d14"/><stop offset="1" stop-color="#ffc98a"/></linearGradient>
+<linearGradient id="pl-radium" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#04211d"/><stop offset=".6" stop-color="#17a08a"/><stop offset="1" stop-color="#c9fff2"/></linearGradient>
+<linearGradient id="pl-spectre" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#150e30"/><stop offset=".6" stop-color="#6a4ee0"/><stop offset="1" stop-color="#ece4ff"/></linearGradient>
+<linearGradient id="beam" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffd08a" stop-opacity=".5"/><stop offset="1" stop-color="#ffd08a" stop-opacity="0"/></linearGradient>
+<linearGradient id="beamv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dfe9f5" stop-opacity=".45"/><stop offset="1" stop-color="#dfe9f5" stop-opacity="0"/></linearGradient>
+<radialGradient id="fog"><stop offset="0" stop-color="#2d343e"/><stop offset=".6" stop-color="#13171c"/><stop offset="1" stop-color="#07080a"/></radialGradient>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#020304"/><stop offset=".5" stop-color="#0b0f15"/><stop offset=".8" stop-color="#261411"/><stop offset="1" stop-color="#6a2412"/></linearGradient>
+<linearGradient id="mist" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14181e" stop-opacity="0"/><stop offset="1" stop-color="#14181e" stop-opacity=".95"/></linearGradient>
+<linearGradient id="gnd" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#55616f" stop-opacity="0"/><stop offset=".5" stop-color="#55616f" stop-opacity=".8"/><stop offset="1" stop-color="#55616f" stop-opacity="0"/></linearGradient>
+</defs>
+</svg>
+
+<div class="page">
+
+<div class="hero">
+  <div id="hero"></div>
+  <div class="txt">
+    <div class="t sub">Planche de style 2 · « Contre-jour », plus sombre</div>
+    <h1 class="t">Titan-Ville</h1>
+    <p>On l'élève. Il grandit. La ville, elle, ne s'en remet pas.</p>
+  </div>
+</div>
+
+<section>
+  <h2 class="t">01 <b>Intention</b></h2>
+  <div class="grid g3">
+    <div class="card plain"><h3 class="t">Plus noir, plus tranchant</h3><p>La brume bleue laisse place à la cendre et à la fumée. Le monstre perd ses rondeurs : dos voûté, crête, griffes, dents, gueule qui rougeoie comme un four.</p></div>
+    <div class="card plain"><h3 class="t">La ville garde les traces</h3><p>Ce qui tombe ne repousse pas. Les incendies durent des heures réelles, les quartiers rasés restent noirs. Chaque soir, il y a moins de fenêtres allumées que la veille.</p></div>
+    <div class="card plain"><h3 class="t">Sombre, toujours pas sanglant</h3><p>J'ai gardé cette limite : ni sang, ni corps, ni visages. La gravité vient d'ailleurs : un compteur de population, des dépêches radio, le silence d'une ville qui se vide.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2 class="t">02 <b>Palette</b></h2>
+  <div class="sw">
+    <div><i style="background:#020304"></i><span><b class="t">Nuit</b>#020304 · monstre, fonds</span></div>
+    <div><i style="background:#0d1016"></i><span><b class="t">Ardoise</b>#0d1016 · panneaux</span></div>
+    <div><i style="background:#3b4048"></i><span><b class="t">Cendre</b>#3b4048 · fumée, lointains</span></div>
+    <div><i style="background:#75808e"></i><span><b class="t">Acier</b>#75808e · texte discret</span></div>
+    <div><i style="background:#7f8fa3"></i><span><b class="t">Lune</b>#7f8fa3 · liserés</span></div>
+    <div><i style="background:#cfc8b8"></i><span><b class="t">Os</b>#cfc8b8 · texte, dents</span></div>
+    <div><i style="background:#ffc76b"></i><span><b class="t">Fenêtre</b>#ffc76b · ceux qui restent</span></div>
+    <div><i style="background:#ff6a2a"></i><span><b class="t">Braise</b>#ff6a2a · le monstre</span></div>
+    <div><i style="background:#b3261a"></i><span><b class="t">Incendie</b>#b3261a · ce qu'il laisse</span></div>
+  </div>
+</section>
+
+<section>
+  <h2 class="t">03 <b>Le monstre, de l'œuf au Titan</b></h2>
+  <p class="lead">Cinq stades, comme dans Mini-Titan. Même le bébé n'est plus mignon : on s'y attache parce qu'on l'a vu naître, pas parce qu'il est rond.</p>
+  <div class="grid g5" id="stades"></div>
+</section>
+
+<section>
+  <h2 class="t">04 <b>Lignées</b></h2>
+  <p class="lead">Silhouette identique, lueur et plaques différentes.</p>
+  <div class="grid g3" id="lignees"></div>
+</section>
+
+<section>
+  <h2 class="t">05 <b>Au menu</b></h2>
+  <p class="lead">Chaque proie se repère par sa petite lumière. Quand il n'y a plus de lumières, il n'y a plus rien à manger.</p>
+  <div class="grid g5" id="menu"></div>
+</section>
+
+<section>
+  <h2 class="t">06 <b>Détruire</b></h2>
+  <p class="lead">Un immeuble tombe en quatre temps, et le quatrième est définitif.</p>
+  <div class="grid g4" id="ruine"></div>
+</section>
+
+<section>
+  <h2 class="t">07 <b>Ce qui s'assombrit dans les règles</b></h2>
+  <p class="lead">C'est ici que cette version s'éloigne le plus de la première planche.</p>
+  <div class="grid g4" id="regles"></div>
+  <div class="card disp">
+    <h3 class="t">Les dépêches</h3>
+    <p style="margin:6px 0 10px;font-size:13px;color:#979fa9">Une ligne de radio s'affiche de temps en temps et s'archive dans un journal. C'est la seule voix humaine du jeu.</p>
+    <div><span class="t">Jour 3 · 04:12</span>Des pêcheurs signalent une forme sous la jetée.</div>
+    <div><span class="t">Jour 6 · 23:47</span>Le port ne répond plus.</div>
+    <div><span class="t">Jour 9 · 02:30</span>Évacuation des quartiers est. Certains laissent la lumière allumée.</div>
+    <div><span class="t">Jour 11 · 19:05</span>L'armée tient le pont. Elle demande qu'on ne regarde pas.</div>
+    <div class="last"><span class="t">Jour 14</span>Plus aucun signal.</div>
+  </div>
+</section>
+
+<section>
+  <h2 class="t">08 <b>Les deux écrans</b></h2>
+  <div class="screens">
+    <div><div class="phone" id="ph1"></div><p class="cap"><b>La tanière.</b> La grotte donne sur la ville. On voit d'ici ce qui brûle encore depuis la dernière sortie.</p></div>
+    <div><div class="phone" id="ph2"></div><p class="cap"><b>La ville.</b> Elle a un nom et une population qui baisse. La dépêche du moment s'affiche sous les jauges.</p></div>
+    <div class="grid" style="align-self:center">
+      <div class="card plain"><h3 class="t">Ce qui reste du tamagotchi</h3><ul>
+        <li><b>Les soins</b> : faim, énergie, propreté, sommeil</li>
+        <li><b>La croissance lente</b>, sur plusieurs jours réels</li>
+        <li><b>Le rugissement</b>, qui vide les immeubles</li>
+        <li><b>L'attachement</b> : on l'a couvé, on revient le voir chaque jour</li></ul></div>
+      <div class="card plain"><h3 class="t">Ce qui change depuis la planche 1</h3><ul>
+        <li><b>La ville ne se rebâtit plus</b> : elle s'épuise, puis on en change</li>
+        <li><b>Le monstre peut être blessé</b> et en garde les marques</li>
+        <li><b>« Défoulement » devient « Rage »</b></li>
+        <li><b>Un monstre redessiné</b>, plus anguleux, avec crête, griffes et dents</li>
+        <li><b>La pluie, la cendre et les incendies</b> remplacent la brume bleue</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2 class="t">09 <b>À valider avant de coder</b></h2>
+  <div class="grid g3">
+    <div class="card plain q"><h3 class="t">Une ville qui meurt</h3><p>C'est le choix le plus lourd. Il remplace « la ville se rebâtit » par « on épuise une ville, puis on migre vers la suivante ». Si tu préfères garder une seule ville qui se relève lentement, dis-le.</p></div>
+    <div class="card plain q"><h3 class="t">Blessures et mort</h3><p>Mini-Titan avait des règles douces. Ici l'armée blesse vraiment. Le monstre peut-il en mourir, ou seulement être marqué et affaibli&nbsp;?</p></div>
+    <div class="card plain q"><h3 class="t">La limite</h3><p>J'ai tenu « pas de sang, pas de corps ». Si tu veux la déplacer, précise jusqu'où.</p></div>
+  </div>
+  <p class="foot">Planche de style uniquement. La première version reste dans planche.html pour comparer. Rien du jeu n'est développé.</p>
+</section>
+
+</div>
+
+<script>
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const f=n=>(+n).toFixed(1),f2=n=>(+n).toFixed(2);
+const BODY='#020304',RIM='#7f8fa3';
+const ACC={braise:'#ff6a2a',radium:'#35e0c2',spectre:'#a78bff'};
+const ACL={braise:'#ffd9a8',radium:'#d5fff5',spectre:'#f0eaff'};
+const T=(x,y,s,txt,c='#cfc8b8',ls=.14,an='start')=>`<text x="${x}" y="${y}" font-size="${s}" fill="${c}" letter-spacing="${ls}em" text-anchor="${an}" font-family="Bahnschrift,'DIN Condensed','Arial Narrow',sans-serif" font-weight="600">${txt}</text>`;
+const ST={
+ bebe:{bw:30,bh:36,lh:13,lw:11,hr:14,sn:.6,tl:46,lean:10,np:4,ps:7,eye:.15,teeth:2},
+ enfant:{bw:36,bh:52,lh:22,lw:13,hr:14.5,sn:.85,tl:78,lean:16,np:6,ps:11,eye:.13,teeth:3},
+ ado:{bw:42,bh:68,lh:32,lw:15,hr:14.5,sn:1.05,tl:112,lean:22,np:8,ps:16,eye:.11,teeth:4},
+ titan:{bw:56,bh:88,lh:40,lw:20,hr:15.5,sn:1.2,tl:150,lean:27,np:10,ps:23,eye:.1,teeth:5}
+};
+function mon(k,o={}){
+ const p=ST[k],acc=o.acc||'braise',gl=o.glow??1,rim=o.rim??1.4,shape=o.shape||0;
+ const rx=p.bw/2,ry=p.bh/2,a=p.lean*Math.PI/180,cy=-(p.lh*.8+ry);
+ const rot=(x,y)=>[x*Math.cos(a)-y*Math.sin(a),cy+x*Math.sin(a)+y*Math.cos(a)];
+ const T0=rot(0,-ry),hc=[T0[0]+p.hr*.55,T0[1]-p.hr*.3];
+ const X=.6+p.sn*1.2,U=[X-.05,-.02],L=[X-.25,.5];
+ const htr=`translate(${f(hc[0])},${f(hc[1])}) rotate(14) scale(${p.hr})`;
+ const head=`<path transform="${htr}" d="M-1,0C-1,-.9 -.1,-1.1 .5,-.85L${f2(X-.2)},-.5C${f2(X+.1)},-.42 ${f2(X+.15)},-.12 ${f2(U[0])},${f2(U[1])}L.7,.14L${f2(L[0])},${f2(L[1])}C${f2(X-.2)},.68 ${f2(X-.5)},.78 ${f2(X-.7)},.74L0,.9C-.7,.92 -1,.5 -1,0ZM-.1,-1L-1.05,-1.5L-.7,-.6ZM-.6,-.75L-1.5,-1L-1,-.3Z"/>`;
+ const neck=`<ellipse transform="translate(${f((T0[0]+hc[0])/2-p.hr*.2)},${f((T0[1]+hc[1])/2+p.hr*.35)}) rotate(${p.lean})" rx="${f(p.hr*.9)}" ry="${f(p.hr*1.15)}"/>`;
+ const S=rot(-rx*.8,ry*.3),bx=-rx*.45,tip=[bx-p.tl,-p.tl*.06];
+ const c1=[S[0]-p.tl*.3,S[1]*.45],c2=[tip[0]+p.tl*.35,tip[1]-p.tl*.1-3];
+ const tail=`<path d="M${f(S[0])},${f(S[1])}C${f(c1[0])},${f(c1[1])} ${f(c2[0])},${f(c2[1])} ${f(tip[0])},${f(tip[1])}C${f(tip[0]+p.tl*.3)},1 ${f(bx-p.tl*.25)},0 ${f(rx*.2)},${f(-p.lh*.3)}Z"/>`;
+ const leg=lx=>`<ellipse cx="${f(lx)}" cy="${f(-p.lh*.78)}" rx="${f(p.lw*.8)}" ry="${f(p.lh*.55)}"/><path d="M${f(lx-p.lw*.5)},${f(-p.lh*.5)}H${f(lx+p.lw*.42)}L${f(lx+p.lw*.5)},${f(-p.lh*.22)}L${f(lx+p.lw*1.2)},${f(-p.lh*.17)}L${f(lx+p.lw*1.8)},0H${f(lx-p.lw*.55)}Z"/>`;
+ const A=rot(rx*.8,-ry*.4);
+ const arm=`<path transform="translate(${f(A[0])},${f(A[1])}) rotate(${f(p.lean*.4)}) scale(${p.bw})" d="M-.14,-.1L.3,.16L.55,.02L.74,0L.62,.08L.8,.12L.63,.16L.74,.26L.52,.2L.32,.36L-.16,.14Z"/>`;
+ const torso=`<ellipse transform="translate(0,${f(cy)}) rotate(${p.lean})" rx="${f(rx)}" ry="${f(ry)}"/>`;
+ const shapes=tail+leg(-rx*.55)+torso+neck+head+leg(rx*.05)+arm;
+ const pls=[];const n1=p.np,n2=Math.max(2,Math.round(p.np*.6));
+ for(let i=0;i<n1;i++){const th=(-.6-.62*i/(n1-1))*Math.PI,q=rot(rx*Math.cos(th),ry*Math.sin(th));
+  let s=p.ps*(.5+.5*Math.sin(Math.PI*(i+.6)/n1))*(i%2?1.18:.84);if(o.scars&&i>1&&i<5)s*=.28;
+  pls.push([q[0],q[1],Math.atan2(q[1]-cy,q[0])*180/Math.PI+90+(i%3-1)*7,s]);}
+ const bz=t=>{const u=1-t;return[u*u*u*S[0]+3*u*u*t*c1[0]+3*u*t*t*c2[0]+t*t*t*tip[0],u*u*u*S[1]+3*u*u*t*c1[1]+3*u*t*t*c2[1]+t*t*t*tip[1]]};
+ for(let i=0;i<n2;i++){const t=.16+.5*i/(n2-1),q=bz(t);pls.push([q[0],q[1],-14+(i%2?6:-5),p.ps*(.62-.38*i/(n2-1))]);}
+ const pd=s=>shape==1?`M${f(-s*.5)},0Q${f(-s*.6)},${f(-s)} 0,${f(-s*1.3)}Q${f(s*.6)},${f(-s)} ${f(s*.5)},0Z`
+   :shape==2?`M${f(-s*.3)},0L0,${f(-s*1.9)}L${f(s*.3)},0Z`
+   :`M${f(-s*.6)},0L${f(-s*.3)},${f(-s*.8)}L${f(-s*.05)},${f(-s*1.6)}L${f(s*.3)},${f(-s*.75)}L${f(s*.6)},0Z`;
+ const plate=pls.map(q=>`<path transform="translate(${f(q[0])},${f(q[1])}) rotate(${f(q[2])}) translate(0,${f(q[3]*.3)})" d="${pd(q[3])}"/>`).join('');
+ let teeth='';
+ for(let i=1;i<=p.teeth;i++){const t=.3+.65*i/p.teeth,v=t-.06;
+  const ux=.7+(U[0]-.7)*t,uy=.14+(U[1]-.14)*t,lx=.7+(L[0]-.7)*v,ly=.14+(L[1]-.14)*v;
+  teeth+=`M${f2(ux-.06)},${f2(uy)}L${f2(ux-.01)},${f2(uy+.17)}L${f2(ux+.05)},${f2(uy)}ZM${f2(lx-.06)},${f2(ly)}L${f2(lx)},${f2(ly-.15)}L${f2(lx+.05)},${f2(ly)}Z`;}
+ const maw=`<g transform="${htr}"><path d="M.7,.14L${f2(U[0])},${f2(U[1])}L${f2(L[0])},${f2(L[1])}Z" fill="${ACC[acc]}" opacity="${f2(.25+.6*gl)}"/><path d="${teeth}" fill="#cfc8b8"/></g>`;
+ const sc=o.scars?[[-.35,-.55,.45,-.25],[-.15,-.3,.55,.05],[-.5,.1,.15,.42]].map(q=>{const a1=rot(rx*q[0],ry*q[1]),a2=rot(rx*q[2],ry*q[3]);return `<path d="M${f(a1[0])},${f(a1[1])}L${f(a2[0])},${f(a2[1])}" stroke="#8494a6" stroke-width="1.1" opacity=".8"/>`}).join(''):'';
+ const ex=hc[0]+p.hr*.42,ey=hc[1]-p.hr*.3,er=p.hr*p.eye;
+ const C=rot(rx*.35,-ry*.05);
+ return `<g>
+ <g fill="${ACC[acc]}" opacity="${f2(.75*gl)}" filter="url(#b5)">${plate}</g>
+ <g fill="url(#pl-${acc})" opacity="${f2(.4+.6*gl)}">${plate}</g>
+ <g fill="${RIM}" transform="translate(${-rim},${-rim*.7})">${shapes}</g>
+ <g fill="${BODY}">${shapes}</g>
+ ${o.core?`<ellipse cx="${f(C[0])}" cy="${f(C[1])}" rx="${f(rx*.4)}" ry="${f(ry*.5)}" fill="${ACC[acc]}" opacity="${f2(.17*gl)}" filter="url(#b5)"/>`:''}
+ ${sc}${maw}
+ <circle cx="${f(ex)}" cy="${f(ey)}" r="${f(er*2.2)}" fill="${ACC[acc]}" opacity="${f2(.6*gl)}" filter="url(#b2)"/>
+ <ellipse cx="${f(ex)}" cy="${f(ey)}" rx="${f(er*1.25)}" ry="${f(er*.45)}" fill="${ACL[acc]}" transform="rotate(24 ${f(ex)} ${f(ey)})"/>
+ </g>`;
+}
+function egg(){return `<g>
+ <ellipse cx="-1.5" cy="-31" rx="22" ry="29" fill="${RIM}"/><ellipse cx="0" cy="-30" rx="22" ry="29" fill="${BODY}"/>
+ <g fill="none" stroke="#ff6a2a" stroke-linejoin="round"><path d="M-9,-52l5,9l-6,7l8,8l-3,9M4,-36l7,5l-2,8l6,6M-4,-28l8,-8" stroke-width="3" opacity=".7" filter="url(#b2)"/>
+ <path d="M-9,-52l5,9l-6,7l8,8l-3,9M4,-36l7,5l-2,8l6,6M-4,-28l8,-8" stroke="#ffd9a8" stroke-width="1"/></g></g>`}
+function sky(seed,x0,x1,base,hmin,hmax,wmin,wmax,fill,win,ws=1){
+ const r=rng(seed);let x=x0,s='';
+ while(x<x1){const w=wmin+r()*(wmax-wmin),h=hmin+r()*(hmax-hmin),y=base-h;
+  s+=`<rect x="${f(x)}" y="${f(y)}" width="${f(w+1)}" height="${f(h)}" fill="${fill}"/>`;
+  if(r()<.25)s+=`<rect x="${f(x+w*.5)}" y="${f(y-h*.12)}" width="${f(1.2*ws)}" height="${f(h*.12)}" fill="${fill}"/>`;
+  if(win)for(let yy=y+5*ws;yy<base-6*ws;yy+=9*ws)for(let xx=x+4*ws;xx<x+w-5*ws;xx+=7*ws)if(r()<win)s+=`<rect x="${f(xx)}" y="${f(yy)}" width="${f(3*ws)}" height="${f(4*ws)}" fill="#ffc76b" opacity="${(.25+r()*.5).toFixed(2)}"/>`;
+  x+=w+(r()<.2?r()*10:0);}
+ return s;}
+function rub(seed,x0,x1,base,h,fill='#0b0e12'){const r=rng(seed);let d=`M${x0},${base}`;for(let x=x0;x<=x1;x+=4+r()*7)d+=`L${f(x)},${f(base-r()*h)}`;return `<path d="${d}L${x1},${base}Z" fill="${fill}"/>`}
+const fire=(x,y,k=1,op=.55)=>`<ellipse cx="${x}" cy="${y}" rx="${50*k}" ry="${18*k}" fill="#b3261a" opacity="${f2(op*.7)}" filter="url(#b12)"/><ellipse cx="${x}" cy="${y}" rx="${30*k}" ry="${10*k}" fill="#ff6a2a" opacity="${op}" filter="url(#b5)"/>`;
+const smoke=(x,y,k=1,op=.6)=>`<g fill="#3d434c" opacity="${op}" filter="url(#b5)"><ellipse cx="${x}" cy="${y-28*k}" rx="${10*k}" ry="${22*k}"/><ellipse cx="${x+8*k}" cy="${y-64*k}" rx="${14*k}" ry="${22*k}"/><ellipse cx="${x+22*k}" cy="${y-98*k}" rx="${22*k}" ry="${18*k}"/></g>`;
+function heli(x,y,s,c=BODY){return `<g transform="translate(${x},${y}) scale(${s})" fill="${c}"><ellipse rx="9" ry="4.6"/><rect x="-23" y="-1.4" width="17" height="2.2"/><rect x="-25" y="-5.5" width="2.6" height="7"/><rect x="-15" y="-8" width="30" height="1"/><rect x="-.8" y="-7.5" width="1.6" height="4"/><rect x="-6" y="6" width="13" height="1"/><rect x="-3" y="4" width="1" height="2.5"/><rect x="3" y="4" width="1" height="2.5"/><circle cx="-24" cy="-5" r="1.4" fill="#ff3b30"/><ellipse cx="4" cy="-.5" rx="3.4" ry="2.4" fill="#55616f" opacity=".8"/></g>`}
+function car(x,y,s,c=BODY){return `<g transform="translate(${x},${y}) scale(${s})"><path d="M21,-5L62,-9V5L21,-2Z" fill="url(#beam)"/><path d="M-20,0V-6Q-19,-8 -15,-8L-10,-14H6L12,-8H18Q21,-8 21,-4V0Z" fill="${c}"/><path d="M-9,-13H5L10,-8H-13Z" fill="#55616f" opacity=".5"/><circle cx="-11" cy="0" r="4" fill="#010101"/><circle cx="12" cy="0" r="4" fill="#010101"/><rect x="19" y="-6" width="2" height="2.4" fill="#ffd9a8"/><rect x="-20" y="-6" width="1.5" height="2" fill="#ff3b30"/></g>`}
+function hum(x,y,h,c='#b4bcc6'){const u=h/10;return `<g transform="translate(${x},${y}) scale(${u})" fill="${c}"><circle cx="0" cy="-8.6" r="1.4"/><path d="M-1.3,-7H1.3L1.6,-3.5L2.6,0H1.2L0,-3L-1.4,0H-2.8L-1.5,-3.6Z"/></g>`}
+function tower(x,y,w,h,o={}){const r=rng(o.seed||5);let s=`<rect x="${x}" y="${y-h}" width="${w}" height="${h}" fill="${o.fill||'#151a21'}"/><rect x="${x}" y="${y-h}" width="1.3" height="${h}" fill="${RIM}" opacity=".6"/><rect x="${x}" y="${y-h}" width="${w}" height="1" fill="${RIM}" opacity=".3"/>`;
+ for(let yy=y-h+7;yy<y-7;yy+=9)for(let xx=x+5;xx<x+w-6;xx+=8)if(r()<(o.lit??.35))s+=`<rect x="${xx}" y="${yy}" width="4" height="5" fill="#ffc76b" opacity="${(.35+r()*.5).toFixed(2)}"/>`;
+ return s;}
+const rain=(seed,w,h,n,op)=>{const r=rng(seed);let s='';for(let i=0;i<n;i++){const x=r()*w*1.1,y=r()*h,l=10+r()*22;s+=`<path d="M${f(x)},${f(y)}l${f(-l*.28)},${f(l)}"/>`}return `<g stroke="#8d9aaa" stroke-width=".7" opacity="${op}">${s}</g>`};
+const embers=(seed,x0,x1,y0,y1,n)=>{const r=rng(seed);let s='';for(let i=0;i<n;i++)s+=`<circle cx="${f(x0+r()*(x1-x0))}" cy="${f(y0+r()*(y1-y0))}" r="${f(.6+r()*1.2)}" opacity="${f2(.3+r()*.6)}"/>`;return `<g fill="#ff8a4a">${s}</g>`};
+const fogbg=(w,h,cx,cy,r)=>`<rect width="${w}" height="${h}" fill="#07080a"/><ellipse cx="${cx}" cy="${cy}" rx="${r}" ry="${r*.8}" fill="url(#fog)"/>`;
+const ground=(w,y)=>`<rect x="0" y="${y}" width="${w}" height="200" fill="#020304"/><rect x="0" y="${y}" width="${w}" height="1" fill="url(#gnd)"/>`;
+
+/* ---------- image d'ouverture ---------- */
+document.getElementById('hero').innerHTML=`<svg viewBox="0 0 1200 540" role="img" aria-label="Le Titan, silhouette noire aux plaques rougeoyantes, au-dessus d'une ville en partie éteinte et en feu">
+<rect width="1200" height="540" fill="url(#sky)"/>
+<circle cx="1030" cy="100" r="50" fill="#b3261a" opacity=".3" filter="url(#b12)"/><circle cx="1030" cy="100" r="27" fill="#c9765a" opacity=".55"/>
+<g fill="#020304" opacity=".85" filter="url(#b12)"><ellipse cx="1000" cy="118" rx="170" ry="16"/><ellipse cx="320" cy="80" rx="300" ry="34"/><ellipse cx="720" cy="40" rx="260" ry="26"/></g>
+<ellipse cx="200" cy="530" rx="190" ry="70" fill="#b3261a" opacity=".55" filter="url(#b24)"/><ellipse cx="1090" cy="530" rx="150" ry="60" fill="#b3261a" opacity=".5" filter="url(#b24)"/><ellipse cx="470" cy="540" rx="110" ry="40" fill="#ff6a2a" opacity=".3" filter="url(#b24)"/>
+<g fill="#07080a" opacity=".9" filter="url(#b24)"><ellipse cx="170" cy="380" rx="60" ry="110"/><ellipse cx="230" cy="230" rx="90" ry="90"/><ellipse cx="340" cy="120" rx="150" ry="60"/><ellipse cx="1100" cy="380" rx="50" ry="100"/><ellipse cx="1150" cy="240" rx="80" ry="80"/></g>
+${sky(11,0,1200,540,150,300,26,60,'#11151b',0)}
+<rect y="250" width="1200" height="290" fill="url(#mist)" opacity=".7"/>
+<g transform="translate(735,575) scale(3.25)">${mon('titan',{rim:.6,core:1})}</g>
+<rect y="310" width="1200" height="230" fill="url(#mist)"/>
+<path d="M330,540L650,190L720,215Z" fill="#dfe9f5" opacity=".06"/>
+${sky(23,0,1200,540,70,190,22,48,'#090b0f',.07)}
+${fire(905,452,2.4,.6)}${fire(215,456,2.8,.6)}
+<g fill="#23272e" opacity=".75" filter="url(#b12)"><ellipse cx="205" cy="420" rx="50" ry="70"/><ellipse cx="250" cy="320" rx="46" ry="60"/></g>
+<g fill="#23272e" opacity=".7" filter="url(#b12)"><ellipse cx="900" cy="410" rx="46" ry="70"/><ellipse cx="935" cy="310" rx="38" ry="56"/></g>
+${heli(590,132,1.5)}${heli(1090,235,1.1)}
+<path d="M594,138L672,214L648,232Z" fill="url(#beamv)" opacity=".5"/>
+${sky(37,0,1200,540,24,100,30,70,'#020304',.03)}
+${rub(4,820,1010,540,78,'#020304')}
+${embers(8,780,1080,250,520,46)}${embers(3,60,420,300,520,30)}
+${rain(5,1200,540,260,.13)}
+</svg>`;
+
+/* ---------- stades ---------- */
+const stades=[
+ ["Œuf","Jour 0","Trouvé dans une épave. Il est chaud et il se fissure de l'intérieur.",`<g transform="translate(110,172)">${egg()}</g>${hum(160,172,16)}`],
+ ["Bébé","Jours 1 à 2","Chasse les passants isolés, la nuit, près des quais.",`<g transform="translate(104,172) scale(1.15)">${mon('bebe',{glow:.45})}</g>${hum(178,172,20)}${hum(190,172,18)}`],
+ ["Enfant","Jours 3 à 5","Ouvre les voitures comme des boîtes. On commence à en parler.",`<g transform="translate(116,172)">${mon('enfant',{glow:.65})}</g>${car(186,172,.75,'#151a21')}`],
+ ["Ado","Jours 6 à 8","Arrache les hélicoptères du ciel. Fait tomber ses premiers immeubles.",`${tower(188,172,24,62,{seed:3})}<g transform="translate(124,172) scale(.9)">${mon('ado',{glow:.85,core:1})}</g>${heli(180,48,.6)}`],
+ ["Titan","Jour 9 et après","Rase des quartiers entiers. Ils ne seront pas rebâtis.",`${sky(8,0,220,172,18,58,10,20,'#12161c',.12,.6)}<g transform="translate(146,172) scale(.86)">${mon('titan',{core:1})}</g>${rub(9,0,220,176,14,'#020304')}`]
+];
+document.getElementById('stades').innerHTML=stades.map(s=>`<div class="card"><svg viewBox="0 0 220 200">${fogbg(220,200,115,110,120)}${ground(220,172)}${s[3]}</svg><div class="b"><h3 class="t">${s[0]}</h3><div class="k t">${s[1]}</div><p>${s[2]}</p></div></div>`).join('');
+
+/* ---------- lignées ---------- */
+const lig=[["Braise","braise",0,"Plaques en éclats, gueule de forge. La lignée d'origine."],["Radium","radium",1,"Plaques arrondies, lueur froide remontée des fonds."],["Spectre","spectre",2,"Épines fines, lueur pâle. On ne le voit qu'au dernier moment."]];
+document.getElementById('lignees').innerHTML=lig.map(l=>`<div class="card"><svg viewBox="0 0 300 200">${fogbg(300,200,160,105,150)}${ground(300,176)}<g transform="translate(190,176)">${mon('titan',{acc:l[1],shape:l[2],core:1})}</g></svg><div class="b"><h3 class="t">${l[0]}</h3><p>${l[3]}</p></div></div>`).join('');
+
+/* ---------- menu ---------- */
+const water=y=>`<rect y="${y}" width="140" height="60" fill="#050709"/><g stroke="#55616f" stroke-width=".8" opacity=".5"><path d="M8,${y+6}h22M50,${y+10}h30M96,${y+5}h26M24,${y+15}h18M78,${y+17}h34"/></g>`;
+const menu=[
+ ["Passants","Dès le bébé","Une bouchée. Ils courent, leurs lampes les trahissent.",`${ground(140,82)}<path d="M52,74L96,66V80Z" fill="url(#beam)"/>${hum(48,82,17)}${hum(72,82,15)}${hum(88,82,16)}${hum(104,82,14)}`],
+ ["Voitures","Dès l'enfant","Fuient en file, phares allumés. Se croquent en deux fois.",`${ground(140,82)}${car(52,80,1.25,'#151a21')}${car(112,80,.7,'#10141a')}`],
+ ["Bateaux","Dès l'ado","Les derniers à quitter le port. Il faut entrer dans l'eau noire.",`${water(78)}<path d="M18,70H122L112,84H28Z" fill="#151a21"/><rect x="18" y="70" width="104" height="1" fill="${RIM}" opacity=".6"/><g fill="#1c222b"><rect x="34" y="60" width="16" height="10"/><rect x="52" y="60" width="16" height="10"/><rect x="43" y="50" width="16" height="10"/><rect x="70" y="62" width="14" height="8"/></g><rect x="92" y="48" width="18" height="22" fill="#151a21"/><g fill="#ffc76b"><rect x="95" y="52" width="3" height="3"/><rect x="105" y="52" width="3" height="3" opacity=".5"/></g><rect x="100" y="38" width="1.2" height="10" fill="#151a21"/><circle cx="100.6" cy="37" r="1.5" fill="#ff3b30"/><g fill="#ffc76b" opacity=".2"><rect x="95" y="88" width="13" height="1"/><rect x="97" y="92" width="9" height="1"/></g>`],
+ ["Hélicoptères","Dès l'ado","Le cherchent au projecteur. À arracher du ciel au bon moment.",`<path d="M74,42L44,96H96Z" fill="url(#beamv)" opacity=".6"/>${heli(72,36,2.1,'#151a21')}`],
+ ["Immeubles","Titan","On les abat, puis on fouille les décombres.",`${ground(140,88)}${tower(22,88,24,44,{seed:2,fill:'#10141a',lit:.15})}${tower(54,88,34,72,{seed:7,lit:.3})}${tower(96,88,22,52,{seed:4,fill:'#10141a',lit:.1})}<rect x="70" y="6" width="1.2" height="10" fill="#151a21"/><circle cx="70.6" cy="5" r="1.5" fill="#ff3b30"/>`]
+];
+document.getElementById('menu').innerHTML=menu.map(m=>`<div class="card"><svg viewBox="0 0 140 100">${fogbg(140,100,70,50,80)}${m[3]}</svg><div class="b"><h3 class="t">${m[0]}</h3><div class="k t">${m[1]}</div><p>${m[2]}</p></div></div>`).join('');
+
+/* ---------- destruction ---------- */
+const crack=`<path d="M78,42l-5,16l8,10l-7,14l6,12l-5,16" fill="none" stroke="#010101" stroke-width="2.2" stroke-linejoin="round"/><path d="M73,58l-10,6M81,68l9,5" stroke="#010101" stroke-width="1.4"/>`;
+const dust=(x,y,k)=>`<g fill="#4a525d" opacity=".55" filter="url(#b5)"><ellipse cx="${x}" cy="${y}" rx="${30*k}" ry="${9*k}"/><ellipse cx="${x+18*k}" cy="${y-8*k}" rx="${14*k}" ry="${8*k}"/><ellipse cx="${x-20*k}" cy="${y-6*k}" rx="${12*k}" ry="${7*k}"/></g>`;
+const ruine=[
+ ["1 · Debout","Des fenêtres allumées. Quelqu'un regarde dehors.",`${tower(48,132,46,96,{seed:6,lit:.6})}`],
+ ["2 · Fissuré","Premier coup. La moitié des lumières s'éteint, les habitants sortent.",`${tower(48,132,46,96,{seed:6,lit:.25})}${crack}${dust(70,132,.5)}${hum(104,132,9)}${hum(112,132,8)}${hum(120,132,9)}`],
+ ["3 · Bascule","Il penche et se brise. Plus une lumière.",`<g transform="rotate(13 94 132)">${tower(48,132,46,58,{seed:6,lit:0})}</g><g transform="rotate(31 100 80) translate(14,-4)">${tower(48,78,46,40,{seed:9,lit:0})}</g>${dust(78,132,1)}`],
+ ["4 · Cicatrice","Les décombres brûlent des heures, puis restent là. Rien ne repousse.",`${fire(72,128,.9,.6)}${smoke(72,118,1,.7)}${rub(5,28,116,132,26,'#0a0c10')}<path d="M68,124l3,-8l3,8Z" fill="#ffd9a8"/><path d="M52,128l2,-5l2,5Z" fill="#ff8a4a"/><path d="M90,127l2,-6l2,6Z" fill="#ff8a4a"/>`]
+];
+document.getElementById('ruine').innerHTML=ruine.map(m=>`<div class="card"><svg viewBox="0 0 140 150">${fogbg(140,150,70,80,90)}${ground(140,132)}${m[2]}</svg><div class="b"><h3 class="t">${m[0]}</h3><p>${m[1]}</p></div></div>`).join('');
+
+/* ---------- règles plus sombres ---------- */
+const jet=(x,y,s)=>`<path transform="translate(${x},${y}) scale(${s})" d="M0,0L-14,-3L-18,-8L-21,-8L-19,-2L-26,-1V1L-14,2Z" fill="#151a21" stroke="${RIM}" stroke-width=".4"/>`;
+const regles=[
+ ["La ville ne se relève pas","Chaque quartier rasé reste noir. La population affichée ne fait que baisser.",
+  `${ground(240,128)}${sky(31,0,118,128,30,78,12,22,'#151a21',.3,.8)}${fire(180,126,1.1,.45)}${smoke(160,118,.8,.6)}${smoke(204,120,.6,.5)}${rub(12,120,240,128,20,'#0a0c10')}<rect x="119" y="20" width=".8" height="108" fill="#55616f" opacity=".6"/>${T(8,18,7.5,'NORD · 31 904 HAB.','#75808e')}${T(232,18,7.5,'EST · ÉTEINT','#ff6a2a',.14,'end')}`],
+ ["Les incendies durent","Ce qu'il brûle le soir brûle encore au matin. On le voit depuis la tanière.",
+  `${ground(240,128)}${fire(120,124,1.6,.6)}${smoke(110,112,1.1,.75)}${smoke(140,116,.8,.6)}${rub(7,60,190,128,34,'#0a0c10')}<path d="M112,118l5,-14l5,14Z" fill="#ffd9a8"/><path d="M92,122l3,-8l3,8ZM142,121l3,-9l3,9Z" fill="#ff8a4a"/>${embers(6,70,190,30,110,22)}${T(120,144,7.5,'BRÛLE ENCORE 5 H 20','#ff6a2a',.14,'middle')}`],
+ ["Il peut être blessé","L'armée finit par venir. Plaques brisées et cicatrices restent sur sa silhouette.",
+  `${ground(240,128)}<g transform="translate(150,128) scale(.72)">${mon('titan',{scars:1,glow:.5,core:1})}</g>${jet(66,36,1)}${jet(40,50,.8)}<g fill="#151a21"><rect x="196" y="120" width="26" height="8"/><rect x="202" y="114" width="12" height="7"/><rect x="186" y="116" width="18" height="1.6"/></g><rect x="196" y="120" width="26" height=".8" fill="${RIM}" opacity=".6"/>`],
+ ["La dernière fenêtre","Quand la ville est éteinte, il n'y a plus rien à manger. Il s'en va vers la suivante.",
+  `${fire(204,126,1.2,.35)}${ground(240,128)}${sky(41,0,240,128,22,84,12,24,'#0d1015',0,.8)}<rect x="62" y="70" width="3" height="4" fill="#ffc76b"/><circle cx="63.5" cy="72" r="7" fill="#ffc76b" opacity=".25" filter="url(#b2)"/><g transform="translate(206,128) scale(.2)">${mon('titan',{rim:0})}</g>${T(120,144,7.5,'VILLE 1 · 1 LUMIÈRE','#75808e',.14,'middle')}`]
+];
+document.getElementById('regles').innerHTML=regles.map(m=>`<div class="card"><svg viewBox="0 0 240 152">${fogbg(240,152,120,76,140)}${m[2]}</svg><div class="b"><h3 class="t">${m[0]}</h3><p>${m[1]}</p></div></div>`).join('');
+
+/* ---------- écrans ---------- */
+const G=(x,y,w,lab,v,hot)=>`${T(x,y,7.5,lab,'#75808e')}${T(x+w,y,7.5,v,hot?'#ff6a2a':'#cfc8b8',.08,'end')}<rect x="${x}" y="${y+5}" width="${w}" height="1.6" fill="#1f252d"/><rect x="${x}" y="${y+5}" width="${w*v/100}" height="1.6" fill="${hot?'#ff6a2a':'#cfc8b8'}"/>`;
+const IC={dormir:'M3,-8A8.5,8.5 0 1 0 8,4A6.5,6.5 0 1 1 3,-8Z',laver:'M0,-9C5,-3 6.5,0 6.5,2.5A6.5,6.5 0 0 1 -6.5,2.5C-6.5,0 -5,-3 0,-9Z',jouer:'M0,-8L8,0L0,8L-8,0Z',rugir:'M-8,-3H-4L2,-8V8L-4,3H-8ZM5,-4Q8,0 5,4',sortir:'M-9,8V-1h4v-6h5v9h3v-5h5V8Z'};
+const B=(x,y,ic,lab,hot,r=21)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#06070a" fill-opacity=".75" stroke="${hot?'#ff6a2a':'#323a45'}" stroke-width="1.2"/><path transform="translate(${x},${y})" d="${IC[ic]}" fill="none" stroke="${hot?'#ff6a2a':'#cfc8b8'}" stroke-width="1.4" stroke-linejoin="round"/>${T(x,y+r+13,7,lab,hot?'#ff6a2a':'#75808e',.14,'middle')}`;
+const ret=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="#ff6a2a" stroke-width="1" stroke-dasharray="3 3" opacity=".9"/>`;
+
+document.getElementById('ph1').innerHTML=`<svg viewBox="0 0 300 620">
+<rect width="300" height="620" fill="#0a0d11"/>
+<ellipse cx="150" cy="300" rx="170" ry="200" fill="url(#fog)"/>
+<circle cx="214" cy="210" r="22" fill="#b3261a" opacity=".3" filter="url(#b5)"/><circle cx="214" cy="210" r="13" fill="#c9765a" opacity=".5"/>
+${fire(96,372,.9,.5)}${smoke(92,366,.9,.6)}${smoke(232,368,.5,.4)}
+${sky(4,40,270,372,6,26,6,12,'#0c0f14',.1,.45)}
+<rect x="0" y="372" width="300" height="100" fill="#050709"/>
+<g stroke="#55616f" stroke-width=".7" opacity=".4"><path d="M130,380h44M200,388h30M170,402h40M190,420h30"/></g>
+<g stroke="#b3261a" stroke-width=".9" opacity=".5"><path d="M70,380h44M82,388h26M88,398h18"/></g>
+<ellipse cx="150" cy="470" rx="70" ry="10" fill="#ff6a2a" opacity=".25" filter="url(#b5)"/>
+<g transform="translate(160,466) scale(1.34)">${mon('ado',{core:1,rim:1.1})}</g>
+<path fill-rule="evenodd" fill="#020304" d="M0,0H300V620H0ZM34,466C10,300 52,138 150,128C246,138 292,300 266,466Z"/>
+<g fill="#020304"><path d="M92,150l6,42l7,-46ZM130,128l5,30l6,-31ZM186,132l6,48l8,-42ZM222,160l4,26l6,-18Z"/></g>
+<path d="M34,466C10,300 52,138 150,128" fill="none" stroke="${RIM}" stroke-width=".8" opacity=".3"/>
+${T(24,50,21,'ORAG')}${T(24,66,8,'ADO · JOUR 6 · LIGNÉE BRAISE','#75808e')}${T(276,50,9,'23:41','#75808e',.1,'end')}
+${G(24,88,116,'FAIM',34,1)}${G(160,88,116,'ÉNERGIE',78)}${G(24,110,116,'PROPRETÉ',55)}${G(160,110,116,'RAGE',62)}
+${T(150,500,8.5,'IL A FAIM. IL RESTE DES LUMIÈRES À L’EST.','#ff6a2a',.14,'middle')}
+${B(42,548,'dormir','DORMIR')}${B(96,548,'laver','LAVER')}${B(150,548,'jouer','JOUER')}${B(204,548,'rugir','RUGIR')}${B(258,548,'sortir','SORTIR',1)}
+</svg>`;
+
+document.getElementById('ph2').innerHTML=`<svg viewBox="0 0 300 620">
+<rect width="300" height="620" fill="#080a0e"/>
+${fire(262,466,1.5,.6)}<ellipse cx="60" cy="470" rx="90" ry="40" fill="#b3261a" opacity=".25" filter="url(#b24)"/>
+<g fill="#07080a" opacity=".9" filter="url(#b12)"><ellipse cx="262" cy="380" rx="26" ry="60"/><ellipse cx="276" cy="280" rx="36" ry="50"/><ellipse cx="250" cy="190" rx="60" ry="40"/></g>
+${sky(3,0,300,470,170,300,22,40,'#10141a',0)}
+<rect y="250" width="300" height="220" fill="url(#mist)" opacity=".8"/>
+${sky(14,150,246,470,90,170,24,36,'#0c0f14',.14)}
+${rub(6,240,300,470,34,'#050608')}<path d="M262,462l3,-9l3,9ZM282,464l2,-6l2,6Z" fill="#ff8a4a"/>
+${tower(176,470,36,188,{seed:12,lit:.14,fill:'#161b23'})}
+<path d="M196,290l-6,22l9,16l-8,22l7,18l-5,24" fill="none" stroke="#010101" stroke-width="2.4" stroke-linejoin="round"/>
+<circle cx="194" cy="360" r="26" fill="#06070a" fill-opacity=".9" stroke="#323a45" stroke-width="2"/><path d="M194,334A26,26 0 0 1 194,386" fill="none" stroke="#ff6a2a" stroke-width="2"/>${T(194,364,10,'2 / 4','#ff6a2a',.08,'middle')}
+<g transform="translate(88,470) scale(1.28)">${mon('ado',{core:1,rim:1.1})}</g>
+<path d="M236,196L210,286H262Z" fill="url(#beamv)" opacity=".45"/>${heli(236,190,1.25)}${ret(236,190,24)}
+<rect y="470" width="300" height="150" fill="#040506"/><rect y="470" width="300" height="1" fill="#55616f" opacity=".5"/>
+<g stroke="#2a3038" stroke-width="1.2" stroke-dasharray="12 10"><path d="M0,498H300"/></g>
+${car(226,491,.7,'#151a21')}${ret(228,487,17)}
+<g transform="rotate(-18 150 514)">${car(150,514,.8,'#0c0f14').replace('url(#beam)','none')}</g>
+${hum(170,478,7)}${hum(178,479,6)}${ret(174,475,11)}
+${embers(2,200,300,300,460,18)}${rain(9,300,620,90,.12)}
+<rect width="300" height="134" fill="#020304" opacity=".7"/>
+${T(24,50,21,'SAINT-ORME')}${T(24,66,8,'31 904 HABITANTS · 58 % ÉTEINTE','#75808e')}${T(276,50,9,'23:47','#75808e',.1,'end')}
+${G(24,88,116,'FAIM',41,1)}${G(160,88,116,'RAGE',70)}
+<circle cx="27" cy="113.5" r="2" fill="#ff6a2a"/>${T(36,116,7.5,'23:47 · LE PORT NE RÉPOND PLUS.','#cfc8b8')}
+${B(150,556,'rugir','RUGIR',1,27)}${B(52,560,'sortir','RENTRER',0,19)}${B(248,560,'jouer','FRAPPER',0,19)}
+</svg>`;
+</script>
+</body>
+</html>

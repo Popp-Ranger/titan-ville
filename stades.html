@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Titan-Ville — les stades</title>
+<style>
+:root{--fond:#06070a;--ardoise:#0d1016;--trait:#171c24;--acier:#75808e;--os:#cfc8b8}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--fond);color:var(--os);font-family:"Segoe UI",system-ui,sans-serif;font-size:15px;line-height:1.5}
+.t{font-family:Bahnschrift,"DIN Condensed","Roboto Condensed","Arial Narrow",sans-serif;text-transform:uppercase;letter-spacing:.14em;font-weight:600}
+.page{max-width:1240px;margin:0 auto;padding:40px 16px 70px}
+h1{margin:6px 0 0;font-size:clamp(28px,5vw,54px);line-height:1;letter-spacing:.1em}
+.sub{font-size:12px;color:#7f8fa3}
+.lead{margin:14px 0 26px;color:#979fa9;max-width:60em}
+.rang{margin-top:22px}
+.rang h2{margin:0 0 8px;font-size:15px;display:flex;gap:12px;align-items:baseline}
+.rang h2 i{font-style:normal;font-size:10.5px}
+.g{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.c{background:var(--ardoise);border:1px solid var(--trait);border-radius:4px;overflow:hidden}
+.c svg{display:block;width:100%;height:auto;background:#07080a}
+.c b{display:block;padding:6px 10px 8px;font-size:10px;color:var(--acier)}
+.lm{opacity:var(--gl,1)}
+@media(max-width:700px){.g{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<svg style="position:absolute;width:0;height:0" aria-hidden="true"><defs>
+<filter id="b2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2"/></filter>
+<filter id="b5" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="5"/></filter>
+<filter id="b12" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="12"/></filter>
+<linearGradient id="pl-braise" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a0c05"/><stop offset=".6" stop-color="#c93d14"/><stop offset="1" stop-color="#ffc98a"/></linearGradient>
+<linearGradient id="beamf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0c0" stop-opacity=".5"/><stop offset="1" stop-color="#fff0c0" stop-opacity="0"/></linearGradient>
+<radialGradient id="fog"><stop offset="0" stop-color="#363e49"/><stop offset=".6" stop-color="#161a20"/><stop offset="1" stop-color="#07080a"/></radialGradient>
+<linearGradient id="gnd" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#55616f" stop-opacity="0"/><stop offset=".5" stop-color="#55616f" stop-opacity=".8"/><stop offset="1" stop-color="#55616f" stop-opacity="0"/></linearGradient>
+</defs></svg>
+<div class="page">
+  <div class="t sub">Titan-Ville · planche des stades</div>
+  <h1 class="t">De l'œuf au Titan</h1>
+  <p class="lead">Les douze espèces à leurs cinq stades, telles qu'elles apparaissent dans le jeu. Chaque dessin est ramené à la même hauteur : dans le jeu, c'est la ville qui rétrécit autour du monstre.</p>
+  <div id="r"></div>
+</div>
+<script src="js/art.js"></script>
+<script>
+const A=TV.art,N=['Œuf','Bébé','Enfant','Ado','Titan'];
+const cadre=el=>`<svg viewBox="0 0 320 230"><rect width="320" height="230" fill="#07080a"/><ellipse cx="160" cy="105" rx="200" ry="135" fill="url(#fog)"/><rect y="190" width="320" height="40" fill="#020304"/><rect y="190" width="320" height="1" fill="url(#gnd)"/>${el}</svg>`;
+document.getElementById('r').innerHTML=A.SP.map(sp=>`<div class="rang"><h2 class="t">${sp.n}<i class="t" style="color:${sp.c}">${sp.k}</i></h2><div class="g">`
+ +N.map((n,st)=>`<div class="c">${cadre(st?sp.draw(st):`<g transform="translate(160,190) scale(1.7)">${A.egg(sp.c,.8)}</g>`)}<b class="t">${n}</b></div>`).join('')+`</div></div>`).join('');
+</script>
+</body>
+</html>
