@@ -40,12 +40,18 @@ header{padding:16px 20px 8px;flex:none}
 .jg div{display:flex;justify-content:space-between}
 .jg span{color:var(--os)}
 .jg u{display:block;height:2px;background:#1f252d;margin-top:4px;position:relative}
-.jg u:after{content:"";position:absolute;inset:0 auto 0 0;width:var(--v);background:var(--os);transition:width .4s}
+.jg u:after{content:"";position:absolute;inset:0 auto 0 0;width:var(--v);background:var(--c,var(--os));transition:width .4s}
 .jg.ev{grid-column:1/-1}
 .jg.ev u{height:3px}
 .jg.ev u:after{background:var(--c)}
-.jg.hot span{color:var(--braise)}
-.jg.hot u:after{background:var(--braise)}
+.jg.ev.gain span{color:var(--c)}
+.jg.ev.gain u{box-shadow:0 0 9px var(--c)}
+/* chaque jauge a sa couleur ; en alerte, elle clignote et son chiffre prend la couleur */
+.jg.hot{animation:alerte .65s ease-in-out infinite alternate}
+.jg.hot div{color:var(--os)}
+.jg.hot span{color:var(--c,var(--braise))}
+.jg.hot u{box-shadow:0 0 7px var(--c,var(--braise))}
+@keyframes alerte{from{opacity:1}to{opacity:.45}}
 .dep{margin-top:11px;min-height:17px;font-size:11.5px;color:#a3abb5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .dep:before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--braise);margin-right:8px;vertical-align:1px}
 .dep:empty:before{display:none}
@@ -81,6 +87,17 @@ main{flex:1;min-height:0;position:relative;border-block:1px solid var(--trait)}
 @keyframes rotor{to{transform:scaleX(.25)}}
 .flamme{animation:flamme .5s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:50% 100%}
 @keyframes flamme{to{transform:scaleY(.7)}}
+.pop{font-size:9.5px;text-anchor:middle;paint-order:stroke;stroke:#020304;stroke-width:2.5px;animation:pop 1.25s ease-out forwards}
+@keyframes pop{0%{opacity:0;transform:translateY(4px)}15%{opacity:1}70%{opacity:1}100%{opacity:0;transform:translateY(-30px)}}
+.vol0{animation:vol0 .8s ease-out forwards}.vol1{animation:vol1 .8s ease-out forwards}.vol2{animation:vol2 .8s ease-out forwards}
+@keyframes vol0{to{transform:translate(18px,0) rotate(50deg);opacity:.5}}
+@keyframes vol1{to{transform:translate(95px,-34px) rotate(240deg);opacity:0}}
+@keyframes vol2{to{transform:translate(190px,-80px) rotate(480deg);opacity:0}}
+#rouge{opacity:0;transition:opacity .3s}
+.frz #rouge{animation:rouge .7s ease-in-out infinite alternate}
+@keyframes rouge{from{opacity:.1}to{opacity:.26}}
+#bar button.bat i{animation:bat .6s ease-in-out infinite alternate}
+@keyframes bat{to{box-shadow:0 0 16px #ff6a2a99;background:#ff6a2a22}}
 #pluie{opacity:0;transition:opacity .4s}
 .wash #pluie{opacity:1}
 .fade{animation:fade .35s forwards}

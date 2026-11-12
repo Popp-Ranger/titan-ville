@@ -7,9 +7,9 @@ const U=[14,14,7,3.2,1.6];        // pixels par mètre selon le stade : la camé
 const MH=[0,84,108,134,160];      // hauteur du monstre à l'écran, en ville
 const DH=[0,74,98,124,150];       // dans la tanière
 const WALK=85;                    // px/s
-let ecran='',mode='taniere',shown=-1,ents=[],eid=0,spawnT=0,last=0,cam=0,sayT=0,choix=0,bph=[];
-const mon={x:14,tx:null,face:1,tgt:null,cool:0,walk:0};
-const den={x:150,tx:150,wait:2,face:1};
+let ecran='',mode='taniere',shown=-1,ents=[],eid=0,spawnT=0,last=0,cam=0,sayT=0,choix=0,bph=[],barKey='',flashT=0;
+const mon={x:14,tx:null,face:1,tgt:null,cool:0,walk:0,combo:0,comboT:0};
+const den={x:150,tx:150,wait:2,face:1,game:null};
 const svg=$('#scene');
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const hhmm=t=>{const d=new Date(t);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
@@ -27,34 +27,52 @@ function fiche(i){choix=i;const sp=A.SP[i];
  go('fiche');$('#fiche').scrollTop=0}
 function jouer(){mode='taniere';shown=-1;go('jeu');build();hud();bar()}
 
+/* ---------- sons : les rugissements enregistrés, et trois bruits fabriqués ---------- */
+let AC=null;
+function son(k){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();const t=AC.currentTime;
+ const bruit=(d,fr,v)=>{const b=AC.createBuffer(1,Math.floor(AC.sampleRate*d),AC.sampleRate),a=b.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=(Math.random()*2-1)*Math.pow(1-i/a.length,2);
+  const s=AC.createBufferSource(),fl=AC.createBiquadFilter(),g=AC.createGain();s.buffer=b;fl.type='lowpass';fl.frequency.value=fr;g.gain.value=v;s.connect(fl);fl.connect(g);g.connect(AC.destination);s.start(t)};
+ if(k==='croc')bruit(.1,1500,.45);
+ else if(k==='chute')bruit(1.2,170,1);
+ else{bruit(.25,240,.8);const o=AC.createOscillator(),g=AC.createGain();o.frequency.setValueAtTime(92,t);o.frequency.exponentialRampToValueAtTime(36,t+.22);g.gain.setValueAtTime(.7,t);g.gain.exponentialRampToValueAtTime(.001,t+.26);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+.27)}
+ }catch(e){}}
+function rugit(){try{const a=new Audio('sons/rugir-'+(1+Math.floor(Math.random()*4))+'.wav');a.playbackRate=.8;a.volume=.8;a.play().catch(()=>{})}catch(e){}}
+
 /* ---------- affichage commun ---------- */
 function say(t,ms=2600){if(!t)return;sayT=Date.now()+ms;const m=$('#msg');m.textContent=t;m.className='t hot'}
 function anim(c,ms=500){const m=$('#mi');if(!m)return;m.classList.remove('bite','hit','hop','roar');void m.getBBox();m.classList.add(c);setTimeout(()=>m.classList.remove(c),ms)}
 function shake(){svg.classList.remove('shake');void svg.getBBox();svg.classList.add('shake');setTimeout(()=>svg.classList.remove('shake'),340)}
-function glow(){const S=C.S,m=$('#mi');if(m)m.style.setProperty('--gl',S.dead?.04:S.sleep?.18:f2(.35+.65*S.faim/100))}
-function rugit(){try{const a=new Audio('sons/rugir-'+(1+Math.floor(Math.random()*4))+'.wav');a.playbackRate=.8;a.volume=.8;a.play().catch(()=>{})}catch(e){}}
+function glow(){const S=C.S,m=$('#mi');if(m)m.style.setProperty('--gl',S.dead?.04:S.sleep?.18:C.frenzied(Date.now())?1.6:f2(.35+.65*S.faim/100))}
 function place(x,y,face,h){const g=$('#mg');if(g){const s=h/168;g.setAttribute('transform',`translate(${f(x)},${f(y)}) scale(${f2(face*s)},${f2(s)}) translate(-160,-190)`)}}
 function drawMon(){const S=C.S,g=$('#mon'),sp=A.SP[S.sp];if(!g)return;
  if(S.stage===0){g.innerHTML=`<g transform="translate(150,338) scale(1.5)" data-oeuf="1">${A.egg(sp.c,S.taps/12)}<circle cy="-30" r="34" fill="#000" fill-opacity="0"/></g>`;return}
  g.innerHTML=`<g id="mg"><g id="mi">${sp.draw(S.stage)}</g></g>`;glow()}
+/* ce que l'action a fait gagner, écrit au-dessus du monstre */
+const gtxt=g=>!g?'':g.sec>0?'+'+(g.sec>=5400?(g.sec/3600).toFixed(1).replace('.',',')+' h':Math.max(1,Math.round(g.sec/60))+' min'):g.pts?'+'+g.pts:'';
+function pop(txt,x,y,c){const fx=$('#fx');if(!fx||!txt)return;const t=document.createElementNS(NS,'text');t.setAttribute('x',f(x));t.setAttribute('y',f(y));t.setAttribute('class','pop t');t.setAttribute('fill',c||'#cfc8b8');t.textContent=txt;fx.appendChild(t);setTimeout(()=>t.remove(),1300)}
+function gagne(g,serie){if(!g)return;flashT=Date.now()+900;const S=C.S,sp=A.SP[S.sp];
+ if(mode==='ville')pop(gtxt(g)+(serie>1?' · série ×'+serie:''),mon.x*U[S.stage],GY-MH[S.stage]-8-Math.random()*8,sp.c);
+ else pop(gtxt(g),den.x,338-DH[S.stage]-8,sp.c)}
 
-const JG=[['faim','Faim',v=>v<=30],['energie','Énergie',v=>v<=20],['proprete','Propreté',v=>v<=25],['rage','Rage',v=>v>=70]];
-function hud(){const S=C.S;if(!S)return;const now=Date.now(),sp=A.SP[S.sp],st=C.stats(now);
+const JG=[['faim','Faim',v=>v<=30,'#ffb03a'],['energie','Énergie',v=>v<=20,'#8fd16a'],['proprete','Propreté',v=>v<=25,'#6fc3ff'],['rage','Rage',v=>v>=70,'#ff3b4e']];
+const dans=s=>s>=86400?Math.floor(s/86400)+' j '+Math.floor(s%86400/3600)+' h':s>=3600?Math.floor(s/3600)+' h '+Math.floor(s%3600/60)+' min':s>=60?Math.ceil(s/60)+' min':'moins d\'une minute';
+function hud(){const S=C.S;if(!S)return;const now=Date.now(),sp=A.SP[S.sp],st=C.stats(now),ev=C.evol(now);
  if(mode==='ville'){$('#nm').textContent=S.city.name;
   $('#sub').textContent=nb(st.pop)+' habitants · '+(st.wait>0?'rebâtie dans '+(st.wait>=1?Math.ceil(st.wait)+' h':'moins d\'une heure'):Math.round(st.debout*100)+' % debout')}
  else{$('#nm').textContent=S.name;$('#sub').textContent=S.stage===0?'Œuf · '+sp.n:C.STN[S.stage]+' · Jour '+C.jour(now)+' · '+sp.n}
- const ev=C.evol(now),dans=s=>s>=86400?Math.floor(s/86400)+' j '+Math.floor(s%86400/3600)+' h':s>=3600?Math.floor(s/3600)+' h '+Math.floor(s%3600/60)+' min':s>=60?Math.ceil(s/60)+' min':'moins d\'une minute';
- $('#jauges').innerHTML=(S.stage===0?'':JG.map(([k,l,hot])=>{const v=Math.round(S[k]);return `<div class="jg t${hot(v)?' hot':''}"><div>${l}<span>${v}</span></div><u style="--v:${v}%"></u></div>`}).join(''))
-  +`<div class="jg ev t" style="--c:${sp.c}"><div>${S.stage===0?'Éclosion':ev.next?'Évolution · '+ev.next:'Évolution · stade final'}<span>${S.stage===0?Math.round(ev.p*100)+' %':ev.next?'dans '+dans(ev.reste):'Titan'}</span></div><u style="--v:${(ev.p*100).toFixed(1)}%"></u></div>`;
+ $('#jauges').innerHTML=(S.stage===0?'':JG.map(([k,l,hot,c])=>{const v=Math.round(S[k]);return `<div class="jg t${hot(v)?' hot':''}" style="--c:${c}"><div>${l}<span>${v}</span></div><u style="--v:${v}%"></u></div>`}).join(''))
+  +`<div class="jg ev t${ev.gel?' hot':''}${now<flashT?' gain':''}" style="--c:${sp.c}"><div>${S.stage===0?'Éclosion':ev.next?'Évolution · '+ev.next:'Terreur · stade final'}<span>${S.stage===0?Math.round(ev.p*100)+' %':!ev.next?nb(S.score):ev.gel?'arrêtée : '+ev.gel:(ev.x2?'×2 · ':'')+'dans '+dans(ev.reste)}</span></div><u style="--v:${(ev.p*100).toFixed(1)}%"></u></div>`;
  $('#dep').textContent=S.log[0]?hhmm(S.log[0].t)+' · '+S.log[0].x:'';
- if(now>sayT){const[t,hot]=C.humeur(now);const m=$('#msg');m.textContent=t;m.className='t'+(hot?' hot':'')}
- glow()}
-function bar(){const S=C.S;if(!S||S.stage===0||S.dead){$('#bar').innerHTML='';return}
+ if(now>sayT&&!den.game){const[t,hot]=C.humeur(now);const m=$('#msg');m.textContent=t;m.className='t'+(hot?' hot':'')}
+ svg.classList.toggle('frz',mode==='ville'&&C.frenzied(now));
+ glow();bar()}
+function bar(){const S=C.S,el=$('#bar');if(!S||S.stage===0||S.dead){if(barKey!=='-'){barKey='-';el.innerHTML=''}return}
+ const pret=mode==='ville'&&S.rage>=80&&!S.sleep,key=[mode,S.sleep,S.stage,pret].join();if(key===barKey)return;barKey=key;
  const b=(a,ic,l,c='')=>`<button data-a="${a}" class="t ${c}"><i>${A.icon(ic)}</i><span>${l}</span></button>`;
- $('#bar').innerHTML=mode==='ville'
-  ?b('rentrer','rentrer','Rentrer')+b('rugir','rugir','Rugir','hot grand')+(S.stage>=C.MIN.bld?b('frapper','frapper','Frapper'):b('frapper','frapper','Écraser'))
+ el.innerHTML=mode==='ville'
+  ?b('rentrer','rentrer','Rentrer')+(pret?b('rugir','rugir','Déchaîner','hot grand bat'):b('rugir','rugir','Rugir','grand'))+(S.stage>=C.MIN.bld?b('frapper','frapper','Frapper'):b('frapper','frapper','Écraser'))
   :(S.sleep?b('dormir','reveil','Réveiller'):b('dormir','dormir','Dormir'))+b('laver','laver','Laver')+b('jouer','jouer','Jouer')+b('rugir','rugir','Rugir')+b('sortir','sortir','Sortir','hot')}
-function build(){const S=C.S;shown=S.stage;ents=[];mon.tgt=null;mon.tx=null;if(mode==='ville')buildVille();else buildDen()}
+function build(){const S=C.S;shown=S.stage;ents=[];mon.tgt=null;mon.tx=null;mon.combo=0;den.game=null;if(mode==='ville')buildVille();else buildDen()}
 
 /* ---------- la tanière ---------- */
 function buildDen(){const S=C.S,now=Date.now(),st=C.stats(now),sp=A.SP[S.sp];
@@ -68,12 +86,21 @@ function buildDen(){const S=C.S,now=Date.now(),st=C.stats(now),sp=A.SP[S.sp];
  <g id="mon"></g><g id="pluie">${A.rain(4,300,420,170,.5)}</g>
  <path fill-rule="evenodd" fill="#020304" d="M0,0H300V420H0ZM32,338C8,210 50,44 150,34C250,44 292,210 268,338Z"/>
  <path fill="#020304" d="M92,56l6,42l7,-46ZM130,36l5,30l6,-31ZM186,40l6,48l8,-42ZM222,66l4,26l6,-18Z"/>
- <path d="M32,338C8,210 50,44 150,34" fill="none" stroke="#7f8fa3" stroke-width=".8" opacity=".3"/>`;
+ <path d="M32,338C8,210 50,44 150,34" fill="none" stroke="#7f8fa3" stroke-width=".8" opacity=".3"/><g id="fx" pointer-events="none"></g>`;
  den.x=den.tx=150;drawMon();place(den.x,338,den.face,DH[S.stage])}
-function upDen(dt){const S=C.S;if(S.stage===0||S.sleep||S.dead)return;
+function upDen(dt,now){const S=C.S;if(S.stage===0||S.sleep||S.dead)return;
+ if(den.game){const x=150+90*Math.sin((now-den.game.t0)/1000*3.4);den.game.x=x;const c=$('#curseur');if(c)c.setAttribute('x',f(x-1));if(now-den.game.t0>7000)jeuFin(now);return}
  if(Math.abs(den.tx-den.x)<1){den.wait-=dt;if(den.wait<=0){den.tx=105+Math.random()*90;den.wait=2+Math.random()*5}}
  else{const d=den.tx-den.x;den.face=d>0?1:-1;den.x+=Math.sign(d)*Math.min(Math.abs(d),14*dt)}
  place(den.x,338,den.face,DH[S.stage])}
+/* le jeu d'adresse : un trait va et vient, il faut toucher quand il passe au centre */
+function jeuDebut(now){const S=C.S,sp=A.SP[S.sp],h=DH[S.stage];den.game={t0:now,x:150};den.x=den.tx=clamp(den.x,112,148);den.face=1;place(den.x,338,1,h);
+ $('#fx').innerHTML=`<g id="epave" transform="translate(${f(den.x+h*.62)},338)"><g><path d="M-15,0L-13,-10L-5,-16L7,-13L14,-7L15,0Z" fill="#1a2029"/><path d="M-13,-10L-5,-16L7,-13" fill="none" stroke="#8898ac" stroke-width="1"/></g></g>
+ <g id="visee"><rect x="60" y="371" width="180" height="3" fill="#1f252d"/><rect x="116" y="370" width="68" height="5" fill="#55616f"/><rect x="138" y="369" width="24" height="7" fill="${sp.c}"/><rect id="curseur" x="149" y="363" width="2" height="19" fill="#fff"/></g>`;
+ const m=$('#msg');m.textContent='Touche quand le trait passe au centre.';m.className='t hot';sayT=now+7000}
+function jeuFin(now){const g=den.game;if(!g)return;den.game=null;const d=Math.abs(g.x-150),q=now-g.t0>7000?0:d<=12?2:d<=34?1:0,r=C.playEnd(q,now);
+ anim('hit',420);son('coup');const e=$('#epave g'),v=$('#visee');if(e)e.setAttribute('class','vol'+q);if(v)v.remove();setTimeout(()=>{const x=$('#epave');if(x)x.remove()},850);
+ say(['Raté. Il grogne.','Bien visé.','En plein dedans.'][q]);gagne(r.g,1);hud()}
 
 /* ---------- la ville ---------- */
 function bldSVG(b,i,now){const u=U[C.S.stage],x=b.x*u,w=b.w*u,h=b.h*u,ph=C.phase(b,now),r=A.rng(b.seed),fill=i%2?'#151a21':'#10141a';
@@ -111,7 +138,7 @@ function buildVille(){const S=C.S,u=U[S.stage],c=S.city,now=Date.now(),Wb=c.W*u,
   <rect x="${f(Wb-2)}" y="${GY}" width="3" height="90" fill="#151a21"/><path d="${rip}" stroke="#55616f" stroke-width=".8" opacity=".45"/>
   <g id="props">${c.props.map((p,i)=>`<g data-p="${i}">${propSVG(p)}</g>`).join('')}</g>
   <g id="ents"></g><g id="mon"></g><g id="fx" pointer-events="none"></g>
- </g>${A.rain(9,300,420,70,.12)}`;
+ </g>${A.rain(9,300,420,70,.12)}<rect id="rouge" width="300" height="420" fill="#b3261a" pointer-events="none"/>`;
  mon.x=clamp(mon.x,2,c.W+c.port-3);cam=clamp(mon.x-150/u,-20/u,c.W+c.port-VW/u+20/u);
  drawMon();upVille(0,now)}
 function redrawB(i,now){const g=svg.querySelector(`[data-b="${i}"]`),b=C.S.city.b[i];if(g){g.innerHTML=bldSVG(b,i,now);bph[i]=C.phase(b,now)}}
@@ -131,7 +158,7 @@ function spawner(now){const S=C.S,st=S.stage,u=U[st],c=S.city,vl=cam,vr=cam+VW/u
  if(cnt('car')<(st<2?1:2)&&Math.random()<.22*(.3+lit)){const l=Math.random()<.5,x=clamp(l?vl-4:vr+4,-5,c.W-4);if(x<vr+6)spawn('car',x,{vx:(l?1:-1)*(3+Math.random()*2)})}
  if(st>=3&&cnt('heli')<1&&Math.random()<.1)spawn('heli',mon.x,{});
  if(st>=3&&cnt('boat')<2&&Math.random()<.2)spawn('boat',c.W+16+Math.random()*(c.port-32),{vx:(Math.random()<.5?1:-1)*(1+Math.random())})}
-function upVille(dt,now){const S=C.S,st=S.stage,u=U[st],c=S.city,Wt=c.W+c.port,mh=MH[st],tg=mon.tgt;
+function upVille(dt,now){const S=C.S,st=S.stage,u=U[st],c=S.city,Wt=c.W+c.port,mh=MH[st],tg=mon.tgt,fz=C.frenzied(now);
  let goal=null,reach=1/u,act=null;
  if(tg){
   if(tg.k==='e'){const e=ents.find(x=>x.id===tg.id);if(!e)mon.tgt=null;else{goal=e.x;reach=(24+mh*.32)/u;act=()=>bite(e,now)}}
@@ -140,7 +167,7 @@ function upVille(dt,now){const S=C.S,st=S.stage,u=U[st],c=S.city,Wt=c.W+c.port,m
  else if(mon.tx!=null)goal=mon.tx;
  let walking=false;
  if(goal!=null){const d=goal-mon.x,ad=Math.abs(d);
-  if(ad>reach){mon.face=d>0?1:-1;mon.x+=Math.sign(d)*Math.min(ad-reach*.85,WALK/u*dt);walking=true}
+  if(ad>reach){mon.face=d>0?1:-1;mon.x+=Math.sign(d)*Math.min(ad-reach*.85,WALK*(fz?1.7:1)/u*dt);walking=true}
   else if(act){if(ad>.2/u)mon.face=d>0?1:-1;if(now>mon.cool)act()}
   else mon.tx=null}
  mon.x=clamp(mon.x,1,Wt-2);mon.walk=walking?mon.walk+dt:0;
@@ -155,17 +182,22 @@ function upVille(dt,now){const S=C.S,st=S.stage,u=U[st],c=S.city,Wt=c.W+c.port,m
   else{e.x+=e.vx*dt;if(e.x<c.W+14||e.x>Wt-14)e.vx=-e.vx;y=GY+12+Math.sin(now/900+e.ph)*1.2}
   const dir=e.vx<0?-1:1;if(dir!==e.dir){e.dir=dir;e.el.firstChild.setAttribute('transform',`scale(${f2(dir*e.sc)},${f2(e.sc)})`)}
   e.el.setAttribute('transform',`translate(${f(e.x*u)},${f(y)})`)}
- if(dt&&now>spawnT){spawnT=now+1200;spawner(now)}}
+ if(dt&&now>spawnT){spawnT=now+(fz?500:1200);spawner(now)}}
+/* série : enchaîner les prises en moins de 4 secondes fait monter le bonus, jusqu'à ×2 */
+const suite=now=>now<mon.comboT?mon.combo+1:1,bonus=n=>Math.min(2,1+.2*(n-1));
+function reussi(n,now){mon.combo=n;mon.comboT=now+4000}
 function bite(e,now){mon.tgt=null;
  if(e.type==='heli'&&!e.low){say('Trop haut. Attends qu\'il descende.');return}
- const r=C.eat(e.type,e.n);if(!r.ok){say(r.why);return}
- kill(e,1);anim('bite',320);mon.cool=now+320;hud()}
-function strike(i,now){mon.tgt=null;const r=C.hit(i,now);if(!r.ok){say(r.why);return}
- mon.cool=now+550;anim('hit',420);shake();redrawB(i,now);const b=C.S.city.b[i];
- if(r.s===1)for(let k=0;k<3;k++)spawn('hum',clamp(b.x+b.w*Math.random(),.5,C.S.city.W-1),{flee:now+6000,n:groupe()});
- if(r.s===3)say(C.S.stage>=4?'Il fouille les décombres.':'Il s\'effondre.');hud()}
-function smashP(i,now){mon.tgt=null;const r=C.smash(i,now);if(!r.ok){say(r.why);return}
- mon.cool=now+400;anim('hit',420);const g=svg.querySelector(`[data-p="${i}"]`);if(g)g.innerHTML=propSVG(C.S.city.props[i]);hud()}
+ const n=suite(now),r=C.eat(e.type,e.n,now,bonus(n));if(!r.ok){say(r.why);return}
+ reussi(n,now);kill(e,1);anim('bite',320);son('croc');mon.cool=now+(C.frenzied(now)?140:320);gagne(r.g,n);hud()}
+function strike(i,now){mon.tgt=null;const n=suite(now),r=C.hit(i,now,bonus(n));if(!r.ok){say(r.why);return}
+ mon.cool=now+(C.frenzied(now)?220:550);anim('hit',420);shake();redrawB(i,now);const b=C.S.city.b[i];
+ if(r.was===0)for(let k=0;k<3;k++)spawn('hum',clamp(b.x+b.w*Math.random(),.5,C.S.city.W-1),{flee:now+6000,n:groupe()});
+ if(r.s===3){reussi(n,now);son('chute');gagne(r.g,n);say(C.S.stage>=4?'Il fouille les décombres.':'Il s\'effondre.')}
+ else{son('coup');if(r.pw>1)say('Coup de rage : il compte double.')}
+ hud()}
+function smashP(i,now){mon.tgt=null;const n=suite(now),r=C.smash(i,now,bonus(n));if(!r.ok){say(r.why);return}
+ reussi(n,now);mon.cool=now+400;anim('hit',420);son('coup');const g=svg.querySelector(`[data-p="${i}"]`);if(g)g.innerHTML=propSVG(C.S.city.props[i]);gagne(r.g,n);hud()}
 function ring(x,y){const fx=$('#fx');if(!fx)return;const c=document.createElementNS(NS,'circle');c.setAttribute('cx',f(x));c.setAttribute('cy',f(y));c.setAttribute('r',6);c.setAttribute('class','ring');fx.appendChild(c);setTimeout(()=>c.remove(),950)}
 
 /* ---------- actions ---------- */
@@ -175,24 +207,26 @@ function action(a){const S=C.S,now=Date.now();
  if(a==='journal')return journal();
  if(a==='fermer')return $('#voile').classList.remove('on');
  if(a==='nouveau'){if(S&&!S.dead&&!confirm('Recommencer ? '+S.name+' sera perdu et tu choisiras un nouvel œuf.'))return;C.reset();return accueil()}
- if(!S)return;
- if(a==='dormir'){C.sleep(!S.sleep);bar();hud();return}
- if(a==='laver'){const r=C.wash(now);if(!r.ok)return say(r.why);svg.classList.add('wash');setTimeout(()=>svg.classList.remove('wash'),1800);say('La pluie le rince.');return hud()}
- if(a==='jouer'){const r=C.play(now);if(!r.ok)return say(r.why);anim('hop');setTimeout(()=>anim('hop'),520);say(['Il s\'acharne sur un rocher.','Il traîne une épave de voiture.','Il joue avec une carcasse de bus.','Il lance des conteneurs à la mer.'][S.stage-1]);return hud()}
- if(a==='rugir'){const r=C.roar(now);if(!r.ok)return say(r.why);rugit();anim('roar',720);
-  if(mode==='ville'){const u=U[S.stage],c=S.city;ring(mon.x*u+mon.face*MH[S.stage]*.3,GY-MH[S.stage]*.8);shake();
+ if(!S||den.game)return;
+ if(a==='dormir'){const r=C.sleep(!S.sleep);if(!r.ok)return say(r.why);return hud()}
+ if(a==='laver'){const r=C.wash(now);if(!r.ok)return say(r.why);svg.classList.add('wash');setTimeout(()=>svg.classList.remove('wash'),1800);say('La pluie le rince.');gagne(r.g,1);return hud()}
+ if(a==='jouer'){const r=C.playCan(now);if(!r.ok)return say(r.why);return jeuDebut(now)}
+ if(a==='rugir'){const ville=mode==='ville',r=C.roar(now,ville);if(!r.ok)return say(r.why);rugit();anim('roar',720);
+  if(ville){const u=U[S.stage],c=S.city;ring(mon.x*u+mon.face*MH[S.stage]*.3,GY-MH[S.stage]*.8);shake();
+   if(r.frz){son('chute');say('Déchaîné. Tout tombe, tout se mange.',12000)}
    for(const e of ents)if(e.type==='hum')e.flee=now+6000;
    let n=ents.filter(e=>e.type==='hum').length;
    for(const b of c.b){if(n>=11)break;const cx=b.x+b.w/2;if(b.s<=1&&cx>cam-2&&cx<cam+VW/u+2){spawn('hum',clamp(cx+(Math.random()-.5)*b.w*.6,.5,c.W-1),{flee:now+6000,n:groupe()});n++}}}
+  else say('Il s\'échauffe.');
   return hud()}
- if(a==='sortir'){const w=C.busy();if(w)return say(w);mode='ville';mon.x=14;mon.face=1;build();bar();hud();return}
- if(a==='rentrer'){mode='taniere';build();bar();hud();return}
+ if(a==='sortir'){const w=C.busy();if(w)return say(w);mode='ville';mon.x=14;mon.face=1;build();hud();return}
+ if(a==='rentrer'){mode='taniere';build();hud();return}
  if(a==='frapper'){const c=S.city;let best=null,bd=1e9;
   if(S.stage>=C.MIN.bld){c.b.forEach((b,i)=>{const d=Math.abs(b.x+b.w/2-mon.x);if(b.s<3&&d<bd){bd=d;best={k:'b',id:i}}})}
   else c.props.forEach((p,i)=>{const d=Math.abs(p.x-mon.x);if(!p.s&&S.stage>=C.MIN[p.k]&&d<bd){bd=d;best={k:'p',id:i}}});
   if(best)mon.tgt=best;else say('Rien à casser pour l\'instant.')}}
-function journal(){const S=C.S;if(!S)return;const now=Date.now(),e=S.eaten,jr=t=>S.hatch?'Jour '+(Math.floor((t-S.hatch)/864e5)+1)+' · '+hhmm(t):hhmm(t);
- $('#panneau').innerHTML=`<h2 class="t">${S.name}</h2><div class="bilan t">${e.hum} passants · ${e.car} voitures · ${e.boat} bateaux · ${e.heli} hélicoptères · ${e.bld} immeubles</div>`
+function journal(){const S=C.S;if(!S)return;const e=S.eaten,jr=t=>S.hatch?'Jour '+(Math.floor((t-S.hatch)/864e5)+1)+' · '+hhmm(t):hhmm(t);
+ $('#panneau').innerHTML=`<h2 class="t">${S.name}</h2><div class="bilan t">Terreur ${nb(S.score)} · ${e.hum} passants · ${e.car} voitures · ${e.boat} bateaux · ${e.heli} hélicoptères · ${e.bld} immeubles</div>`
   +`<button class="gros sec t" data-a="nouveau">Recommencer son personnage</button><h3 class="t">Journal</h3>`
   +(S.log.length?S.log.map(l=>`<div class="ligne"><span class="t">${jr(l.t)}</span>${l.x}</div>`).join(''):'<div class="vide">Aucune dépêche pour l\'instant.</div>')
   +`<button class="gros t" data-a="fermer">Fermer</button>`;
@@ -205,7 +239,8 @@ function mort(){const S=C.S;if($('#voile').classList.contains('on'))return;
 document.addEventListener('click',e=>{const sp=e.target.closest('[data-sp]');if(sp)return fiche(+sp.dataset.sp);const b=e.target.closest('[data-a]');if(b)action(b.dataset.a)});
 svg.addEventListener('pointerdown',e=>{const S=C.S;if(!S||ecran!=='jeu')return;const now=Date.now();
  if(mode==='taniere'){
-  if(S.stage===0&&e.target.closest('[data-oeuf]')){C.tapEgg(now);if(S.stage>0){build();bar();say('Il est né.',3500);rugit()}else drawMon();hud()}
+  if(den.game)return jeuFin(now);
+  if(S.stage===0&&e.target.closest('[data-oeuf]')){C.tapEgg(now);if(S.stage>0){build();say('Il est né.',3500);rugit()}else drawMon();hud()}
   else if(S.stage>0&&e.target.closest('#mg')&&!S.sleep&&!S.dead)anim('hop');
   return}
  const w=C.busy();if(w)return say(w);
@@ -217,13 +252,12 @@ svg.addEventListener('pointerdown',e=>{const S=C.S;if(!S||ecran!=='jeu')return;c
 function pt(e){const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(svg.getScreenCTM().inverse())}
 
 /* ---------- boucles ---------- */
-function lent(){const S=C.S;if(!S||ecran!=='jeu')return;const now=Date.now(),sl=S.sleep;
+function lent(){const S=C.S;if(!S||ecran!=='jeu')return;const now=Date.now();
  const ch=C.advance(now);
- if(ch||S.stage!==shown){build();bar();if(S.stage>1)say('Il a grandi.',4000)}
+ if(ch||S.stage!==shown){build();if(S.stage>1)say('Il a grandi.',4000)}
  else if(mode==='ville'){S.city.b.forEach((b,i)=>{if(C.phase(b,now)!==bph[i])redrawB(i,now)})}
- if(sl!==S.sleep)bar();
- hud();if(S.dead){bar();mort()}}
-function step(dt){const S=C.S;if(!S||ecran!=='jeu')return;if(mode==='ville')upVille(dt,Date.now());else upDen(dt)}
+ hud();if(S.dead)mort()}
+function step(dt){const S=C.S;if(!S||ecran!=='jeu')return;const now=Date.now();if(mode==='ville')upVille(dt,now);else upDen(dt,now)}
 function frame(t){const dt=Math.min(.1,(t-last)/1000||0);last=t;step(dt);requestAnimationFrame(frame)}
 setInterval(lent,1000);setInterval(()=>C.save(),5000);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)C.save();else lent()});
@@ -234,10 +268,10 @@ $('[data-a="journal"]').innerHTML=A.icon('journal');
 const q=new URLSearchParams(location.search),dm=q.get('demo');
 if(dm){const st={oeuf:0,bebe:1,enfant:2,ado:3,titan:4}[dm];
  C.demo({stage:st==null?3:st,sp:+(q.get('sp')||0),ruines:q.get('ruines')==='1',faim:q.get('faim')!=null?+q.get('faim'):null,rage:q.get('rage')!=null?+q.get('rage'):null});
- jouer();if(q.get('ecran')==='ville'&&C.S.stage>0){mode='ville';mon.x=+(q.get('x')||40);build();bar();hud()}}
+ jouer();if(q.get('ecran')==='ville'&&C.S.stage>0){mode='ville';mon.x=+(q.get('x')||40);build();hud()}}
 else if(q.get('ecran')==='accueil'){C.nosave=true;accueil()}
 else if(C.load()){C.advance(Date.now());jouer();if(C.S.dead)mort()}
 else accueil();
 requestAnimationFrame(frame);
-TV.ui={step,lent,action,spawn,mon,get ents(){return ents},get mode(){return mode},get cam(){return cam}};
+TV.ui={step,lent,action,spawn,mon,den,jeuFin,get ents(){return ents},get mode(){return mode},get cam(){return cam}};
 })();
