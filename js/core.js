@@ -78,7 +78,7 @@ core.advance=function(now){const S=core.S;if(!S)return false;
  S.faim=nf;
  S.energie=cl(S.energie+(sl?25*h:-7*m.e*k*h));
  S.proprete=cl(S.proprete-5*m.p*k*h);
- if(!sl)S.rage=cl(S.rage+6*m.r*k*h);
+ if(!sl)S.rage=cl(S.rage+600*m.r*k*h);      // de 0 à 100 en 10 minutes, éveillé, page ouverte
  if(sl&&S.energie>=100&&dt>120)S.sleep=false;
  if(S.faim<12)log('faim',8);
  if(S.starve>=36){S.dead=true;S.sleep=false;log('mort');return false}
