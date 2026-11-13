@@ -128,3 +128,102 @@ main{flex:1;min-height:0;position:relative;border-block:1px solid var(--trait)}
 #panneau .bilan{font-size:11px;color:var(--acier);margin:10px 0 16px}
 .gros.sec{border-color:var(--bord);color:var(--os);margin:0 0 6px}
 #panneau h3{margin:22px 0 4px;font-size:11px;color:var(--acier)}
+
+/* ----- le monstre vivant : chaque partie mobile porte une classe posée par art.js ----- */
+#mi{transform-box:fill-box;transform-origin:50% 100%;animation:respire 3.8s ease-in-out infinite}
+@keyframes respire{50%{transform:scale(.994,1.012)}}
+#mi .qu{animation:queue 3.4s ease-in-out infinite alternate}
+@keyframes queue{from{transform:rotate(-2.2deg)}to{transform:rotate(2.6deg)}}
+#mi .co{animation:cou 4s ease-in-out infinite alternate}
+@keyframes cou{from{transform:rotate(-2deg)}to{transform:rotate(2.5deg)}}
+#mi .oa{animation:onde 2.6s ease-in-out infinite alternate}
+#mi .ob{animation:onde 2.6s ease-in-out infinite alternate-reverse}
+@keyframes onde{from{transform:translateY(0)}to{transform:translateY(-4px)}}
+#mi .ta{animation:tent 2.8s ease-in-out infinite alternate}
+#mi .tb{animation:tent 2.8s ease-in-out infinite alternate-reverse}
+@keyframes tent{from{transform:rotate(-3.5deg)}to{transform:rotate(3.5deg)}}
+#mi .fl{animation:flotte 3.2s ease-in-out infinite alternate}
+@keyframes flotte{from{transform:translateY(0)}to{transform:translateY(-5px)}}
+#mi .fa{animation:fanal 2.9s ease-in-out infinite alternate}
+@keyframes fanal{from{transform:rotate(-6deg)}to{transform:rotate(6deg)}}
+#mi .ai{animation:aile 1.5s ease-in-out infinite alternate}
+#mi .aj{animation:ailj 1.5s ease-in-out infinite alternate}
+@keyframes aile{from{transform:rotate(-6deg)}to{transform:rotate(7deg)}}
+@keyframes ailj{from{transform:rotate(6deg)}to{transform:rotate(-7deg)}}
+#mi .oe{animation:cligne 5.6s infinite}
+@keyframes cligne{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(.08)}}
+#mi.marche .pa{animation:pas .5s ease-in-out infinite alternate}
+#mi.marche .pb{animation:pas .5s ease-in-out infinite alternate-reverse}
+@keyframes pas{from{transform:rotate(-10deg)}to{transform:rotate(10deg)}}
+#mi.marche .pc{animation:leve .36s ease-in-out infinite alternate}
+#mi.marche .pd{animation:leve .36s ease-in-out infinite alternate-reverse}
+@keyframes leve{from{transform:translateY(0)}to{transform:translateY(-6px)}}
+#mi.marche .qu{animation-duration:.5s}
+#mi.marche .ta,#mi.marche .tb{animation-duration:.6s}
+#mi.bite .te{animation:mord .32s}
+@keyframes mord{35%{transform:rotate(-16deg)}70%{transform:rotate(6deg)}}
+#mi.hit .te{animation:mord .42s}
+#mi.hit .br{animation:frappe .42s}
+#mi.hit .bs{animation:frappf .42s}
+@keyframes frappe{30%{transform:rotate(-38deg)}62%{transform:rotate(30deg)}}
+@keyframes frappf{30%{transform:rotate(38deg)}62%{transform:rotate(-30deg)}}
+#mi.roar .te{animation:hurle .7s}
+@keyframes hurle{15%,85%{transform:rotate(-18deg)}50%{transform:rotate(-22deg)}}
+#mi.nait{animation:nait .9s cubic-bezier(.2,1.4,.4,1)}
+@keyframes nait{from{transform:scale(.15);opacity:0}}
+.tape{transform-box:fill-box;transform-origin:50% 100%;animation:tape .28s}
+@keyframes tape{30%{transform:rotate(-7deg)}65%{transform:rotate(6deg)}}
+
+/* ----- proies ----- */
+.eb.trotte{animation:trotte .5s ease-in-out infinite alternate}
+.eb.court{animation:trotte .17s ease-in-out infinite alternate}
+@keyframes trotte{to{transform:translateY(-.9px)}}
+.eb.tangue{animation:tangue 3s ease-in-out infinite alternate}
+@keyframes tangue{from{transform:rotate(-1.5deg)}to{transform:rotate(1.5deg)}}
+.gyro{animation:gyro .5s steps(1) infinite}
+.gyro.g2{animation-delay:.25s}
+@keyframes gyro{50%{opacity:.15}}
+.feu-r{animation:feur 1.7s steps(1) infinite}
+@keyframes feur{60%{opacity:.15}}
+
+/* ----- destructions ----- */
+.eclat{transform-box:fill-box;transform-origin:center;animation:eclat .75s cubic-bezier(.2,.6,.4,1) forwards}
+@keyframes eclat{to{transform:translate(var(--dx),var(--dy)) rotate(var(--r));opacity:0}}
+.pous{opacity:0;transform-box:fill-box;transform-origin:center;animation:pous 1.35s ease-out forwards}
+@keyframes pous{0%{opacity:.75;transform:scale(.3)}100%{opacity:0;transform:scale(1.9) translateY(-8px)}}
+.tombe{animation:tombe 1.1s cubic-bezier(.5,0,.9,.6) forwards}
+@keyframes tombe{0%{transform:translate(0,0)}10%{transform:translate(-2px,2px)}20%{transform:translate(2px,6px)}100%{transform:translate(0,var(--h))}}
+.secoue{animation:secoue .3s}
+@keyframes secoue{25%{transform:translate(-2px,0)}50%{transform:translate(2.5px,0)}75%{transform:translate(-1.5px,0)}}
+
+/* ----- décor ----- */
+.phare{animation:phare 9s ease-in-out infinite alternate}
+.phare.p2{animation-duration:13s;animation-direction:alternate-reverse}
+@keyframes phare{from{transform:rotate(-20deg)}to{transform:rotate(16deg)}}
+.drip{fill:#8d9aaa;opacity:0;animation:drip 3.4s ease-in infinite}
+@keyframes drip{0%{opacity:0;transform:translateY(0)}8%{opacity:.8}70%{opacity:.8;transform:translateY(var(--d))}75%,100%{opacity:0;transform:translateY(var(--d))}}
+#aura{mix-blend-mode:screen}
+
+/* ----- météo et grands moments : des calques HTML au-dessus de la scène, animés par la carte graphique ----- */
+#meteo,#meteo>div,#fondu{position:absolute;inset:0;pointer-events:none}
+#meteo{overflow:hidden}
+#meteo>#pluie2{inset:-240px -80px 0 -80px;opacity:0;transition:opacity .6s;background-size:80px 240px;animation:pluie .55s linear infinite;will-change:transform}
+main.ville #meteo>#pluie2{opacity:.6}
+main.lave #meteo>#pluie2{opacity:1}
+@keyframes pluie{to{transform:translate(-80px,240px)}}
+#meteo>#brume{inset:0 -100% 0 0;opacity:.6;background:radial-gradient(ellipse 30% 20% at 22% 80%,#4a566555,transparent 70%),radial-gradient(ellipse 26% 16% at 62% 66%,#4a566533,transparent 70%),radial-gradient(ellipse 22% 14% at 88% 84%,#4a566544,transparent 70%);background-size:50% 100%;animation:brume 70s linear infinite;will-change:transform}
+@keyframes brume{to{transform:translateX(-50%)}}
+#eclair{opacity:0;background:#dfe9f5}
+#eclair.coup{animation:coup .45s ease-out}
+@keyframes coup{0%{opacity:.5}100%{opacity:0}}
+#eclair.orage{animation:orage 1s ease-out}
+@keyframes orage{0%{opacity:.55}12%{opacity:.05}22%{opacity:.4}100%{opacity:0}}
+#fondu{background:#020304;opacity:0;transition:opacity .34s}
+#fondu.on{opacity:1;transition:opacity .16s}
+#titre{position:absolute;left:0;right:0;top:14%;text-align:center;pointer-events:none;opacity:0}
+#titre.on{animation:titre 3.4s ease-out}
+@keyframes titre{0%{opacity:0;transform:scale(1.3)}9%{opacity:1;transform:scale(1)}82%{opacity:1}100%{opacity:0}}
+#titre small{display:block;font-size:11px;color:var(--braise);letter-spacing:.3em}
+#titre b{display:block;font-size:44px;line-height:1.05;margin-top:6px;text-shadow:0 0 22px #000,0 0 6px #000}
+#titre i{display:block;font-style:normal;font-size:13px;color:#c3ccd6;max-width:22em;margin:10px auto 0;padding:0 16px;text-shadow:0 0 8px #000,0 0 8px #000}
+@media (prefers-reduced-motion:reduce){#mi,#mi *{animation:none!important}#meteo>#pluie2,#meteo>#brume{animation:none}}
