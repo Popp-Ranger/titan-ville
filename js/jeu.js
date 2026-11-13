@@ -7,8 +7,8 @@ const U=[14,14,7,3.2,1.6];        // pixels par mètre selon le stade : la camé
 const MH=[0,84,108,134,160];      // hauteur du monstre à l'écran, en ville
 const DH=[0,86,112,140,168];      // dans la tanière
 const WALK=85;                    // px/s
-let ecran='',mode='taniere',shown=-1,ents=[],eid=0,spawnT=0,last=0,cam=0,sayT=0,choix=0,bph=[],barKey='',flashT=0,orageT=0,L={};
-const mon={x:14,tx:null,face:1,tgt:null,cool:0,walk:0,combo:0,comboT:0,wk:false};
+let ecran='',mode='taniere',shown=-1,ents=[],eid=0,spawnT=0,last=0,cam=0,sayT=0,choix=0,bph=[],barKey='',flashT=0,orageT=0,L={},tirs=[],armLvl=0,armT=0,jetT=0;
+const mon={x:14,tx:null,face:1,tgt:null,cool:0,walk:0,combo:0,comboT:0,wk:false,ko:false};
 const den={x:150,tx:150,wait:2,face:1,game:null,wash:null,puffT:0,wk:false};
 const svg=$('#scene'),main=$('#main');
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -37,13 +37,17 @@ function son(k){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)(
  else if(k==='eau')bruit(.2,3400,.16);
  else if(k==='chute')bruit(1.2,170,1);
  else if(k==='tonnerre')bruit(2.2,110,.6);
+ else if(k==='tir')bruit(.06,2600,.22);
+ else if(k==='canon')bruit(.35,320,.7);
+ else if(k==='jet')bruit(1.3,900,.3);
+ else if(k==='sirene'){const o=AC.createOscillator(),g=AC.createGain();o.type='sawtooth';for(let i=0;i<3;i++){o.frequency.setValueAtTime(430,t+i*.5);o.frequency.linearRampToValueAtTime(690,t+i*.5+.25);o.frequency.linearRampToValueAtTime(430,t+i*.5+.5)}g.gain.setValueAtTime(.06,t);g.gain.linearRampToValueAtTime(.001,t+1.5);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+1.5)}
  else{bruit(.25,240,.8);const o=AC.createOscillator(),g=AC.createGain();o.frequency.setValueAtTime(92,t);o.frequency.exponentialRampToValueAtTime(36,t+.22);g.gain.setValueAtTime(.7,t);g.gain.exponentialRampToValueAtTime(.001,t+.26);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+.27)}
  }catch(e){}}
 function rugit(){try{const a=new Audio('sons/rugir-'+(1+Math.floor(Math.random()*4))+'.wav');a.playbackRate=.8;a.volume=.8;a.play().catch(()=>{})}catch(e){}}
 
 /* ---------- effets ---------- */
 function say(t,ms=2600){if(!t)return;sayT=Date.now()+ms;const m=$('#msg');m.textContent=t;m.className='t hot'}
-function anim(c,ms=500){const m=$('#mi');if(!m)return;m.classList.remove('bite','hit','hop','roar','nait');void m.getBBox();m.classList.add(c);setTimeout(()=>m.classList.remove(c),ms)}
+function anim(c,ms=500){const m=$('#mi');if(!m)return;m.classList.remove('bite','hit','hop','roar','nait','touche');void m.getBBox();m.classList.add(c);setTimeout(()=>m.classList.remove(c),ms)}
 function shake(){svg.classList.remove('shake');void svg.getBBox();svg.classList.add('shake');setTimeout(()=>svg.classList.remove('shake'),340)}
 function eclairEcran(c,orage){const e=$('#eclair');e.style.background=c||'#dfe9f5';e.classList.remove('coup','orage');void e.offsetWidth;e.classList.add(orage?'orage':'coup')}
 /* éclats qui volent : n petits morceaux partant de (x,y) vers le haut */
@@ -54,8 +58,8 @@ function ring(x,y){const fx=$('#fx');if(!fx)return;const c=el('circle',{cx:f(x),
 /* grand titre au milieu de l'écran, pour les moments qui comptent */
 function titre(p,g,t,ms=3400){const e=$('#titre');e.children[0].textContent=p;e.children[1].textContent=g;e.children[2].textContent=t||'';e.classList.remove('on');void e.offsetWidth;e.classList.add('on');clearTimeout(titre.t);titre.t=setTimeout(()=>e.classList.remove('on'),ms)}
 function fondu(cb){const e=$('#fondu');e.classList.add('on');setTimeout(()=>{cb();setTimeout(()=>e.classList.remove('on'),70)},180)}
-function glow(){const S=C.S,m=$('#mi');if(!m)return;const g=S.dead?.04:S.sleep?.18:C.frenzied(Date.now())?1.6:.35+.65*S.faim/100;
- m.style.setProperty('--gl',f2(g));m.classList.toggle('dort',!!S.sleep);
+function glow(){const S=C.S,m=$('#mi');if(!m)return;const g=S.dead?.04:S.sleep?.18:C.frenzied(Date.now())?1.6:(.2+.8*S.vie/100)*(S.faim<20?.7:1);   /* la lueur est sa vie */
+ m.style.setProperty('--gl',f2(g));m.classList.toggle('dort',!!S.sleep);m.classList.toggle('blesse',!S.sleep&&!S.dead&&S.vie<40);
  if(L.aura)L.aura.setAttribute('opacity',f2(Math.min(1,g)));if(L.reflet)L.reflet.setAttribute('opacity',f2(.34*Math.min(1,g)))}
 function place(x,y,face,h){const g=$('#mg');if(g){const s=h/168;g.setAttribute('transform',`translate(${f(x)},${f(y)}) scale(${f2(face*s)},${f2(s)}) translate(-160,-190)`)}}
 function pas(m,walking){if(m.wk!==walking){m.wk=walking;const mi=$('#mi');if(mi)mi.classList.toggle('marche',walking)}}
@@ -70,11 +74,11 @@ function gagne(g,serie){if(!g)return;flashT=Date.now()+900;const S=C.S,sp=A.SP[S
  else pop(gtxt(g),den.x,DY-DH[S.stage]-8,sp.c)}
 
 /* ---------- bandeau du haut et boutons ---------- */
-const JG=[['faim','Faim',v=>v<=30,'#ffb03a'],['energie','Énergie',v=>v<=20,'#8fd16a'],['proprete','Propreté',v=>v<=25,'#6fc3ff'],['rage','Rage',v=>v>=70,'#ff3b4e']];
+const JG=[['faim','Faim',v=>v<=30,'#ffb03a'],['energie','Énergie',v=>v<=20,'#8fd16a'],['proprete','Propreté',v=>v<=25,'#6fc3ff'],['rage','Rage',v=>v>=70,'#ff3b4e'],['vie','Vie',v=>v<=30,'#e9e4d8'],['alerte','Alerte',()=>C.armee()>0,'#b48cff']];
 const dans=s=>s>=86400?Math.floor(s/86400)+' j '+Math.floor(s%86400/3600)+' h':s>=3600?Math.floor(s/3600)+' h '+Math.floor(s%3600/60)+' min':s>=60?Math.ceil(s/60)+' min':'moins d\'une minute';
 function hud(){const S=C.S;if(!S)return;const now=Date.now(),sp=A.SP[S.sp],st=C.stats(now),ev=C.evol(now);
  if(mode==='ville'){$('#nm').textContent=S.city.name;
-  $('#sub').textContent=nb(st.pop)+' habitants · '+(st.wait>0?'rebâtie dans '+(st.wait>=1?Math.ceil(st.wait)+' h':'moins d\'une heure'):Math.round(st.debout*100)+' % debout')}
+  $('#sub').textContent=(C.armee()?C.ARMEE[C.armee()]+' · ':'')+nb(st.pop)+' habitants · '+(st.wait>0?'rebâtie dans '+(st.wait>=1?Math.ceil(st.wait)+' h':'moins d\'une heure'):Math.round(st.debout*100)+' % debout')}
  else{$('#nm').textContent=S.name;$('#sub').textContent=S.stage===0?'Œuf · '+sp.n:C.STN[S.stage]+' · Jour '+C.jour(now)+' · '+sp.n}
  $('#jauges').innerHTML=(S.stage===0?'':JG.map(([k,l,hot,c])=>{const v=Math.round(S[k]);return `<div class="jg t${hot(v)?' hot':''}" style="--c:${c}"><div>${l}<span>${v}</span></div><u style="--v:${v}%"></u></div>`}).join(''))
   +`<div class="jg ev t${ev.gel?' hot':''}${now<flashT?' gain':''}" style="--c:${sp.c}"><div>${S.stage===0?'Éclosion':ev.next?'Évolution · '+ev.next:'Terreur · stade final'}<span>${S.stage===0?Math.round(ev.p*100)+' %':!ev.next?nb(S.score):ev.gel?'arrêtée : '+ev.gel:(ev.x2?'×2 · ':'')+'dans '+dans(ev.reste)}</span></div><u style="--v:${(ev.p*100).toFixed(1)}%"></u></div>`;
@@ -89,7 +93,7 @@ function bar(){const S=C.S,e=$('#bar');if(!S||S.stage===0||S.dead){if(barKey!=='
  e.innerHTML=den.wash?b('laver','laver','Terminer','hot'):mode==='ville'
   ?b('rentrer','rentrer','Rentrer')+(pret?b('rugir','rugir','Déchaîner','hot grand bat'):b('rugir','rugir','Rugir','grand'))+(S.stage>=C.MIN.bld?b('frapper','frapper','Frapper'):b('frapper','frapper','Écraser'))
   :(S.sleep?b('dormir','reveil','Réveiller'):b('dormir','dormir','Dormir'))+b('laver','laver','Laver')+b('jouer','jouer','Jouer')+b('rugir','rugir','Rugir')+b('sortir','sortir','Sortir','hot')}
-function build(){const S=C.S;shown=S.stage;ents=[];mon.tgt=null;mon.tx=null;mon.combo=0;den.game=null;den.wash=null;L={};if(mode==='ville')buildVille();else buildDen()}
+function build(){const S=C.S;shown=S.stage;ents=[];tirs=[];mon.ko=false;mon.tgt=null;mon.tx=null;mon.combo=0;den.game=null;den.wash=null;L={};if(mode==='ville')buildVille();else buildDen()}
 
 /* ---------- la tanière ---------- */
 function buildDen(){const S=C.S,now=Date.now(),st=C.stats(now),sp=A.SP[S.sp];
@@ -241,6 +245,10 @@ function spawn(type,x,o){const u=U[C.S.stage],e=Object.assign({id:++eid,type,x,v
  if(type==='hum'){e.v=Math.floor(q*3);e.fl=Date.now()<e.flee;sc=1.8*u/10;art=humArt(e);hr=Math.max(16,sc*(5+e.n*2.2));cy=-sc*5;cl=e.fl?'court':'trotte'}
  else if(type==='car'){e.v=q<.55?0:q<.75?1:q<.9?2:3;sc=4.5*u/41;art=A.car(e.v);hr=Math.max(17,sc*(e.v===1||e.v===2?34:22));cy=-sc*8}
  else if(type==='heli'){sc=12*u/34;art=`<path d="M0,4L-13,62H13Z" fill="url(#beamv)" opacity=".5"/>`+A.heli();hr=Math.max(20,sc*19);cy=0}
+ else if(type==='flic'){e.v=3;sc=4.5*u/41;art=A.car(3);hr=Math.max(17,sc*22);cy=-sc*8;e.cad=1600;e.tir=Date.now()+900}
+ else if(type==='tank'){sc=Math.max(8*u,22)/46;    /* au stade Titan, on grossit un peu l'armée pour qu'elle reste lisible */art=A.tank();hr=Math.max(19,sc*26);cy=-sc*8;e.cad=4500;e.tir=Date.now()+1800}
+ else if(type==='gun'){sc=Math.max(13*u,26)/34;art=`<path d="M0,4L-10,62H10Z" fill="url(#beamr)" opacity=".5"/>`+A.gunship();hr=Math.max(20,sc*19);cy=0;e.cad=1300;e.tir=Date.now()+1500}
+ else if(type==='jet'){sc=15*u/38;art=A.jet();hr=0;g.setAttribute('pointer-events','none')}
  else{e.v=q<.6?0:1;sc=e.v?22*u/60:40*u/104;art=A.boat(e.v);hr=Math.max(22,sc*(e.v?24:36));cy=-sc*12;cl='tangue'}
  e.sc=sc;g.innerHTML=`<g><g class="eb ${cl}">${art}</g></g><circle cy="${f(cy)}" r="${f(hr)}" fill="#000" fill-opacity="0"/>`;
  e.el=g;$('#ents').appendChild(g);ents.push(e);return e}
@@ -253,7 +261,48 @@ function spawner(now){const S=C.S,st=S.stage,u=U[st],c=S.city,vl=cam,vr=cam+VW/u
  if(cnt('hum')<5&&Math.random()<.15+.6*lit){const l=Math.random()<.5,x=clamp(l?vl-1.5:vr+1.5,.5,c.W-1);if(x<vr+3&&x>vl-3)spawn('hum',x,{vx:(l?1:-1)*(.8+Math.random()*.6),n:groupe()})}
  if(cnt('car')<(st<2?1:2)&&Math.random()<.22*(.3+lit)){const l=Math.random()<.5,x=clamp(l?vl-5:vr+5,-6,c.W-5);if(x<vr+7)spawn('car',x,{vx:(l?1:-1)*(3+Math.random()*2)})}
  if(st>=3&&cnt('heli')<1&&Math.random()<.1)spawn('heli',mon.x,{});
- if(st>=3&&cnt('boat')<2&&Math.random()<.2)spawn('boat',c.W+16+Math.random()*(c.port-32),{vx:(Math.random()<.5?1:-1)*(1+Math.random())})}
+ if(st>=3&&cnt('boat')<2&&Math.random()<.2)spawn('boat',c.W+16+Math.random()*(c.port-32),{vx:(Math.random()<.5?1:-1)*(1+Math.random())});
+ /* la riposte : plus l'alerte monte, plus ce qui arrive est lourd */
+ const lv=C.armee();
+ if(lv>armLvl){C.log('arm'+lv,2);son('sirene');titre('Alerte',C.ARMEE[lv],['','Elle tire à vue.','Chars et hélicoptères entrent en ville.','Les avions arrivent. Reste en mouvement.'][lv],3000);hud()}
+ armLvl=lv;
+ if(lv&&now>armT){const bord=()=>clamp(Math.random()<.5?vl-6:vr+6,-6,c.W-5);
+  if(cnt('flic')<(lv>=2?1:2)&&Math.random()<.5)spawn('flic',bord(),{});
+  if(lv>=2&&cnt('tank')<(st>=4?2:1)&&Math.random()<.4)spawn('tank',bord(),{});
+  if(lv>=2&&cnt('gun')<(lv>=3?2:1)&&Math.random()<.35)spawn('gun',mon.x,{off:Math.random()*6.28});
+  if(lv>=3&&now>jetT){jetT=now+9000+Math.random()*6000;const l=Math.random()<.5;spawn('jet',mon.x+(l?-1:1)*480/u,{vx:(l?1:-1)*420/u});son('jet')}}}
+/* ---------- l'armée : tirs et blessures ---------- */
+function touche(d,x,y,now){if(mode!=='ville'||mon.ko)return;const S=C.S,r=C.wound(d,now),sp=A.SP[S.sp],gros=d>1;
+ if(!r.d){eclats(x,y,gros?5:1,'#8898ac',.6);return}                 /* déchaîné : ça ricoche */
+ eclats(x,y,gros?8:2,sp.c,gros?1.1:.5);                              /* sa lueur gicle : c'est sa blessure */
+ if(gros){pop('−'+Math.max(1,Math.round(r.d)),mon.x*U[S.stage],GY-MH[S.stage]-6,'#ff3b4e');shake();const m=$('#mi');if(m&&!/bite|hit|roar|nait/.test(m.getAttribute('class')||''))anim('touche',240);hud()}
+ if(r.ko)terrasse()}
+function terrasse(){const S=C.S;mon.ko=true;mon.tgt=null;mon.tx=null;armLvl=0;son('chute');eclairEcran('#ff3b4e');shake();hud();
+ titre('Terrassé',S.name,'Il se traîne jusqu\'à sa tanière. Le sommeil le soignera.',4200);
+ setTimeout(()=>fondu(()=>{mode='taniere';build();hud()}),1100)}
+/* balles : elles touchent toujours, mais ne font presque rien */
+function rafale(e,now){const S=C.S,u=U[S.stage],mh=MH[S.stage],fx=$('#fx'),air=e.type==='gun',dir=e.vx<0?-1:1;if(!fx)return;
+ const x0=e.x*u+dir*e.sc*(air?10:6),y0=e.y+(air?e.sc*4:-e.sc*13),x1=mon.x*u+(Math.random()-.5)*mh*.3,y1=GY-mh*(.3+Math.random()*.4);
+ for(let i=0;i<3;i++){const l=el('path',{d:`M${f(x0)},${f(y0)}L${f(x1+(i-1)*3)},${f(y1+(i-1)*4)}`},'trace');l.style.animationDelay=(i*.07)+'s';fx.appendChild(l);setTimeout(()=>l.remove(),420)}
+ son('tir');touche(air?.15:.06,x1,y1,now)}
+/* obus et missiles : ils visent l'endroit où il se trouve au départ du coup, donc bouger les fait manquer */
+function obus(e,now){const S=C.S,u=U[S.stage],mh=MH[S.stage],fx=$('#fx'),dir=e.vx<0?-1:1;if(!fx)return;
+ const x0=e.x*u+dir*e.sc*31,y0=e.y-e.sc*12.3,x1=mon.x*u,y1=GY-mh*.42,g=el('g',{});
+ g.innerHTML='<circle r="5" fill="#ff8a4a" opacity=".4" filter="url(#b2)"/><circle r="1.7" fill="#fff0c0"/>';fx.appendChild(g);
+ tirs.push({el:g,x0,y0,x1,y1,t0:now,T:clamp(Math.hypot(x1-x0,y1-y0)/200,.5,1.1)*1000,d:1.5,r:mh*.28,arc:14});
+ eclats(x0,y0,3,'#ffd9a8',.5);son('canon')}
+function missile(e,now){const S=C.S,u=U[S.stage],mh=MH[S.stage],fx=$('#fx');if(!fx)return;
+ const x0=e.x*u,y0=e.y,x1=mon.x*u,y1=GY-mh*.3,g=el('g',{}),c=el('ellipse',{cx:f(x1),cy:GY+2,rx:f(mh*.3),ry:5},'cible');
+ g.innerHTML=`<g transform="rotate(${f(Math.atan2(y1-y0,x1-x0)*180/Math.PI)})"><path d="M-16,0H0" stroke="#ff8a4a" stroke-width="2" opacity=".6" filter="url(#b2)"/><path d="M-5,0H1" stroke="#fff0c0" stroke-width="1.6" stroke-linecap="round"/></g>`;
+ fx.appendChild(c);fx.appendChild(g);tirs.push({el:g,cible:c,x0,y0,x1,y1,t0:now,T:1100,d:4,r:mh*.36,arc:0,gros:1})}
+function upTirs(now){const S=C.S,u=U[S.stage],fx=$('#fx');
+ for(const t of tirs.slice()){const p=(now-t.t0)/t.T;
+  if(p<1){t.el.setAttribute('transform',`translate(${f(t.x0+(t.x1-t.x0)*p)},${f(t.y0+(t.y1-t.y0)*p-Math.sin(p*Math.PI)*t.arc)})`);continue}
+  tirs=tirs.filter(x=>x!==t);t.el.remove();if(t.cible)t.cible.remove();
+  const hit=Math.abs(mon.x*u-t.x1)<t.r,y=hit?t.y1:GY-4,c=el('circle',{cx:f(t.x1),cy:f(y),r:t.gros?26:14},'boum');
+  if(fx){fx.appendChild(c);setTimeout(()=>c.remove(),440)}
+  eclats(t.x1,y,t.gros?12:6,'#ff8a4a',t.gros?1.5:1);son(t.gros?'chute':'coup');if(t.gros)eclairEcran('#ffd9a8');
+  if(hit)touche(t.d,t.x1,y,now);else poussiere(t.x1,GY,t.gros?60:34,2)}}
 function upVille(dt,now){const S=C.S,st=S.stage,u=U[st],c=S.city,Wt=c.W+c.port,mh=MH[st],tg=mon.tgt,fz=C.frenzied(now);
  let goal=null,reach=1/u,act=null;
  if(tg){
@@ -263,7 +312,7 @@ function upVille(dt,now){const S=C.S,st=S.stage,u=U[st],c=S.city,Wt=c.W+c.port,m
  else if(mon.tx!=null)goal=mon.tx;
  let walking=false;
  if(goal!=null){const d=goal-mon.x,ad=Math.abs(d);
-  if(ad>reach){mon.face=d>0?1:-1;mon.x+=Math.sign(d)*Math.min(ad-reach*.85,WALK*(fz?1.7:1)/u*dt);walking=true}
+  if(ad>reach){mon.face=d>0?1:-1;mon.x+=Math.sign(d)*Math.min(ad-reach*.85,WALK*(fz?1.7:S.vie<25?.7:1)/u*dt);walking=true}   /* grièvement blessé, il traîne la patte */
   else if(act){if(ad>.2/u)mon.face=d>0?1:-1;if(now>mon.cool)act()}
   else mon.tx=null}
  mon.x=clamp(mon.x,1,Wt-2);mon.walk=walking?mon.walk+dt:0;pas(mon,walking);
@@ -279,16 +328,29 @@ function upVille(dt,now){const S=C.S,st=S.stage,u=U[st],c=S.city,Wt=c.W+c.port,m
    e.x+=e.vx*dt;y=GY+3+e.lane*6;if(e.x<0||e.x>c.W-.4||Math.abs(e.x-mon.x)*u>560){kill(e);continue}}
   else if(e.type==='car'){e.x+=e.vx*dt;if(e.x>c.W-4.5&&e.vx>0)e.vx=-e.vx;y=GY+14+e.lane*12;if(e.x<-9||Math.abs(e.x-mon.x)*u>660){kill(e);continue}}
   else if(e.type==='heli'){e.ph+=dt;e.x=mon.x+110/u*Math.sin(e.ph*.5);const alt=mh*1.02+50+56*Math.sin(e.ph*.9);e.low=alt<mh*1.02+32;e.vx=Math.cos(e.ph*.5);y=GY-alt;if(now-e.born>45000){kill(e,1);continue}}
+  else if(e.type==='flic'||e.type==='tank'){   /* ils roulent jusqu'à portée, s'arrêtent et tirent ; l'alerte retombée, ils repartent */
+   const tk=e.type==='tank',d=mon.x-e.x,ad=Math.abs(d),D=((tk?70:50)+mh*.2)/u,v=(tk?26:48)/u;y=e.y=GY+14+e.lane*12;
+   if(C.armee()<(tk?2:1)){if(!e.part)e.part=now+1600;e.vx=(d>0?-1:1)*v;e.x+=e.vx*dt;if(now>e.part){kill(e,1);continue}}
+   else{if(ad>D*1.15||(e.roule&&ad>D)){e.roule=true;e.vx=Math.sign(d)*v;e.x=clamp(e.x+e.vx*dt,-6,c.W-4)}else{e.roule=false;e.vx=(d<0?-1:1)*.001}
+    if(now>e.tir&&ad*u<330&&!mon.ko){e.tir=now+e.cad*(.8+Math.random()*.4);if(tk)obus(e,now);else rafale(e,now)}}}
+  else if(e.type==='gun'){e.ph+=dt;if(C.armee()<2){kill(e,1);continue}
+   e.x=mon.x+130/u*Math.sin(e.ph*.4+e.off);const alt=mh*1.02+44+40*Math.sin(e.ph*.7);e.low=alt<mh*1.02+30;e.vx=mon.x>=e.x?1:-1;y=e.y=GY-alt;
+   if(now>e.tir&&!mon.ko){e.tir=now+e.cad*(.8+Math.random()*.4);rafale(e,now)}}
+  else if(e.type==='jet'){e.x+=e.vx*dt;y=e.y=GY-mh-70-e.lane*30;const dx=Math.abs(e.x-mon.x)*u;
+   if(!e.tire&&dx<170&&!mon.ko){e.tire=1;missile(e,now)}
+   if(dx>560){kill(e);continue}}
   else{e.x+=e.vx*dt;if(e.x<c.W+14||e.x>Wt-14)e.vx=-e.vx;y=GY+12+Math.sin(now/900+e.ph)*1.2}
   const dir=e.vx<0?-1:1;if(dir!==e.dir){e.dir=dir;e.el.firstChild.setAttribute('transform',`scale(${f2(dir*e.sc)},${f2(e.sc)})`)}
   e.el.setAttribute('transform',`translate(${f(e.x*u)},${f(y)})`)}
+ if(tirs.length)upTirs(now);
  if(dt&&now>spawnT){spawnT=now+(fz?500:1200);spawner(now)}}
 /* série : enchaîner les prises en moins de 4 secondes fait monter le bonus, jusqu'à ×2 */
 const suite=now=>now<mon.comboT?mon.combo+1:1,bonus=n=>Math.min(2,1+.2*(n-1));
 function reussi(n,now){mon.combo=n;mon.comboT=now+4000}
 function bite(e,now){mon.tgt=null;
- if(e.type==='heli'&&!e.low){say('Trop haut. Attends qu\'il descende.');return}
- const n=suite(now),r=C.eat(e.type,e.n,now,bonus(n));if(!r.ok){say(r.why);return}
+ if((e.type==='heli'||e.type==='gun')&&!e.low){say('Trop haut. Attends qu\'il descende.');return}
+ const arme={flic:'car',tank:'tank',gun:'heli'}[e.type],n=suite(now),r=arme?C.crush(arme,now,bonus(n)):C.eat(e.type,e.n,now,bonus(n));if(!r.ok){say(r.why);return}
+ if(arme)armT=now+5000;        /* les renforts mettent un moment à venir */
  const S=C.S,u=U[S.stage],mh=MH[S.stage];
  reussi(n,now);happe(e);anim('bite',320);son('croc');mon.cool=now+(C.frenzied(now)?140:320);
  setTimeout(()=>eclats(mon.x*u+mon.face*mh*.24,GY-mh*.7,e.type==='hum'?3:7,e.type==='hum'?'#b4bcc6':'#55616f',e.type==='hum'?.5:1),190);
@@ -318,7 +380,7 @@ function action(a){const S=C.S,now=Date.now();
  if(a==='journal')return journal();
  if(a==='fermer')return $('#voile').classList.remove('on');
  if(a==='nouveau'){if(S&&!S.dead&&!confirm('Recommencer ? '+S.name+' sera perdu et tu choisiras un nouvel œuf.'))return;C.reset();return accueil()}
- if(!S||den.game)return;
+ if(!S||den.game||mon.ko)return;
  if(den.wash){lavFin(now);if(a==='laver')return}
  if(a==='dormir'){const r=C.sleep(!S.sleep);if(!r.ok)return say(r.why);den.puffT=0;return hud()}
  if(a==='laver'){const r=C.washCan();if(!r.ok)return say(r.why);return lavDebut(now)}
@@ -331,14 +393,15 @@ function action(a){const S=C.S,now=Date.now();
    for(const b of c.b){if(n>=11)break;const cx=b.x+b.w/2;if(b.s<=1&&cx>cam-2&&cx<cam+VW/u+2){spawn('hum',clamp(cx+(Math.random()-.5)*b.w*.6,.5,c.W-1),{flee:now+6000,n:groupe()});n++}}}
   else{ring(den.x+den.face*DH[S.stage]*.3,DY-DH[S.stage]*.8);say('Il s\'échauffe.')}
   return hud()}
- if(a==='sortir'){const w=C.busy();if(w)return say(w);return fondu(()=>{mode='ville';mon.x=14;mon.face=1;build();hud()})}
- if(a==='rentrer')return fondu(()=>{mode='taniere';build();hud()});
+ if(a==='sortir'){const w=C.busy();if(w)return say(w);if(S.vie<25)return say('Trop blessé pour sortir. Le sommeil le soigne.');
+  return fondu(()=>{mode='ville';mon.x=14;mon.face=1;armLvl=0;armT=Date.now()+4000;build();hud()})}
+ if(a==='rentrer')return fondu(()=>{mode='taniere';armLvl=0;build();hud()});
  if(a==='frapper'){const c=S.city;let best=null,bd=1e9;
   if(S.stage>=C.MIN.bld){c.b.forEach((b,i)=>{const d=Math.abs(b.x+b.w/2-mon.x);if(b.s<3&&d<bd){bd=d;best={k:'b',id:i}}})}
   else c.props.forEach((p,i)=>{const d=Math.abs(p.x-mon.x);if(!p.s&&S.stage>=C.MIN[p.k]&&d<bd){bd=d;best={k:'p',id:i}}});
   if(best)mon.tgt=best;else say('Rien à casser pour l\'instant.')}}
 function journal(){const S=C.S;if(!S)return;const e=S.eaten,jr=t=>S.hatch?'Jour '+(Math.floor((t-S.hatch)/864e5)+1)+' · '+hhmm(t):hhmm(t);
- $('#panneau').innerHTML=`<h2 class="t">${S.name}</h2><div class="bilan t">Terreur ${nb(S.score)} · ${e.hum} passants · ${e.car} voitures · ${e.boat} bateaux · ${e.heli} hélicoptères · ${e.bld} immeubles</div>`
+ $('#panneau').innerHTML=`<h2 class="t">${S.name}</h2><div class="bilan t">Terreur ${nb(S.score)} · ${e.hum} passants · ${e.car} voitures · ${e.boat} bateaux · ${e.heli} hélicoptères · ${e.tank} chars · ${e.bld} immeubles${S.ko?' · terrassé '+S.ko+' fois':''}</div>`
   +`<button class="gros sec t" data-a="nouveau">Recommencer son personnage</button><h3 class="t">Journal</h3>`
   +(S.log.length?S.log.map(l=>`<div class="ligne"><span class="t">${jr(l.t)}</span>${l.x}</div>`).join(''):'<div class="vide">Aucune dépêche pour l\'instant.</div>')
   +`<button class="gros t" data-a="fermer">Fermer</button>`;
@@ -358,6 +421,7 @@ svg.addEventListener('pointerdown',e=>{const S=C.S;if(!S||ecran!=='jeu')return;c
    else{drawMon();const o=$('#oeuf');if(o)o.setAttribute('class','tape');eclats(150,DY-50,3,A.SP[S.sp].c,.7);son('croc');hud()}}
   else if(S.stage>0&&e.target.closest('#mg')&&!S.sleep&&!S.dead)anim('hop');
   return}
+ if(mon.ko)return;
  const w=C.busy();if(w)return say(w);
  const t=e.target.closest('[data-e],[data-b],[data-p]'),u=U[S.stage];
  if(t&&t.dataset.e)mon.tgt={k:'e',id:+t.dataset.e};
@@ -390,7 +454,7 @@ $('[data-a="journal"]').innerHTML=A.icon('journal');
 $('#pluie2').style.backgroundImage=`url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="80" height="240"><g stroke="#9aa8b8" stroke-width=".9" stroke-linecap="round" opacity=".55"><path d="M70,8l-7,21M30,52l-9,27M56,104l-6,18M22,150l-8,24M74,186l-6,18M44,26l-4,12M12,92l-5,15M40,206l-7,21"/></g></svg>`)}")`;
 const q=new URLSearchParams(location.search),dm=q.get('demo');
 if(dm){const st={oeuf:0,bebe:1,enfant:2,ado:3,titan:4}[dm];
- C.demo({stage:st==null?3:st,sp:+(q.get('sp')||0),ruines:q.get('ruines')==='1',faim:q.get('faim')!=null?+q.get('faim'):null,rage:q.get('rage')!=null?+q.get('rage'):null});
+ C.demo({stage:st==null?3:st,sp:+(q.get('sp')||0),ruines:q.get('ruines')==='1',faim:q.get('faim')!=null?+q.get('faim'):null,rage:q.get('rage')!=null?+q.get('rage'):null,vie:q.get('vie')!=null?+q.get('vie'):null,alerte:q.get('alerte')!=null?+q.get('alerte'):null});
  jouer();if(q.get('ecran')==='ville'&&C.S.stage>0){mode='ville';mon.x=+(q.get('x')||40);build();hud()}
  else if(q.get('etat')==='dort'&&C.S.stage>0){C.S.energie=40;C.S.sleep=true;hud()}
  else if(q.get('etat')==='lave'&&C.S.stage>0){C.S.proprete=35;lavDebut(Date.now())}}
@@ -398,5 +462,5 @@ else if(q.get('ecran')==='accueil'){C.nosave=true;accueil()}
 else if(C.load()){C.advance(Date.now());jouer();if(C.S.dead)mort()}
 else accueil();
 requestAnimationFrame(frame);
-TV.ui={step,lent,action,spawn,mon,den,jeuFin,lavFrotte,lavFin,naissance,evolution,get ents(){return ents},get mode(){return mode},get cam(){return cam}};
+TV.ui={step,lent,action,spawn,spawner,touche,mon,den,get tirs(){return tirs},jeuFin,lavFrotte,lavFin,naissance,evolution,get ents(){return ents},get mode(){return mode},get cam(){return cam}};
 })();

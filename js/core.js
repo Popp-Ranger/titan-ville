@@ -6,10 +6,16 @@ const TV=window.TV=window.TV||{};
 const H=3600,DAY=86400,KEY='titan-ville-v1';
 const STN=['Œuf','Bébé','Enfant','Ado','Titan'];
 const AGE=[0,0,2*DAY,5*DAY,8*DAY];          // croissance (s) à laquelle commence chaque stade
-const FOOD={hum:[0,9,4,3,2],car:[0,0,11,6,3],heli:[0,0,0,14,8],boat:[0,0,0,22,12]};
-const MIN={hum:1,car:2,heli:3,boat:3,bld:3,p:1,k:2};
+const FOOD={hum:[0,9,4,3,2],car:[0,0,11,6,3],heli:[0,0,0,14,8],boat:[0,0,0,22,12],tank:[0,0,0,10,6]};
+const MIN={hum:1,car:2,heli:3,boat:3,bld:3,p:1,k:2,tank:3};
 /* part du stade en cours gagnée par action */
-const GAIN={hum:.003,car:.006,heli:.012,boat:.015,bld:.012,p:.002,k:.004,play:[.0005,.003,.006],wash:.003};
+const GAIN={hum:.003,car:.006,heli:.012,boat:.015,bld:.012,p:.002,k:.004,play:[.0005,.003,.006],wash:.003,tank:.015};
+/* l'armée. ALERTE : ce que chaque méfait ajoute à l'alerte de la ville (0 à 100, elle retombe de 4 par minute).
+   SOIN : la vie rendue par une prise. CUIR : part des dégâts encaissée selon l'espèce. */
+const ALERTE={hum:1,car:2.5,heli:6,boat:4,tank:5,p:1,k:2,coup:4,chute:10,rugir:3,frz:12};
+const SOIN={hum:.4,car:1,heli:3,boat:3,tank:3};
+const CUIR={carapace:.6,colosse:.8,belier:.8,voile:1.3};
+const ARMEE=['','Police','Armée','Aviation'];
 const NOMS={hum:'passants',car:'voitures',heli:'hélicoptères',boat:'bateaux'};
 const VILLES=['Saint-Orme','Port-Halvern','Grisemont','Val-Noir','Brume-sur-Mer','Les Sablons'];
 const PRENOMS=['Orag','Kaïr','Mogh','Vesk','Thurn','Azel','Brann','Ygg'];
@@ -30,11 +36,17 @@ const DEP={
  noir:"Plus une fenêtre allumée. La ville retient son souffle.",
  rebati:"Les grues ont travaillé toute la nuit. On rallume.",
  faim:"On l'entend gronder depuis la côte.",
- mort:"La forme ne bouge plus. Personne n'ose approcher."
+ mort:"La forme ne bouge plus. Personne n'ose approcher.",
+ arm1:"La police tire à vue. Les balles l'agacent à peine.",
+ arm2:"L'armée entre en ville. Les chars prennent le boulevard.",
+ arm3:"L'aviation a l'autorisation de tirer.",
+ tank1:"Un char retrouvé sur le dos, la tourelle à trente mètres.",
+ blesse:"Sa lueur faiblit. Les artilleurs reprennent espoir.",
+ ko:"Il recule vers la côte, presque éteint. La ville respire."
 };
 function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 const cl=v=>Math.max(0,Math.min(100,v));
-const core={S:null,nosave:false,STN,AGE,MIN,NOMS,PRENOMS,DEP};
+const core={S:null,nosave:false,STN,AGE,MIN,NOMS,PRENOMS,DEP,ARMEE};
 
 function newCity(seed){
  const r=rng(seed),b=[],props=[];let x=8;
@@ -44,12 +56,13 @@ function newCity(seed){
  return {seed,name:VILLES[Math.floor(r()*VILLES.length)],b,props,W:+(x+6).toFixed(1),port:110};
 }
 function fresh(sp,name){const now=Date.now();
- return {v:1,sp,name:name||PRENOMS[0],born:now,hatch:0,last:now,stage:0,taps:0,grow:0,score:0,frz:0,faim:55,energie:85,proprete:90,rage:15,
-  sleep:false,starve:0,dead:false,city:newCity(now%2147483647),log:[],seen:{},eaten:{hum:0,car:0,boat:0,heli:0,bld:0},roarT:0,washT:0,playT:0};}
+ return {v:1,sp,name:name||PRENOMS[0],born:now,hatch:0,last:now,stage:0,taps:0,grow:0,score:0,frz:0,faim:55,energie:85,proprete:90,rage:15,vie:100,alerte:0,ko:0,
+  sleep:false,starve:0,dead:false,city:newCity(now%2147483647),log:[],seen:{},eaten:{hum:0,car:0,boat:0,heli:0,bld:0,tank:0},roarT:0,washT:0,playT:0};}
 
 core.load=function(){try{const t=localStorage.getItem(KEY);if(t){const o=JSON.parse(t);if(o&&o.v===1){
   if(o.grow==null)o.grow=o.stage>0?Math.max(0,(o.last-o.hatch)/1000):0;       // parties d'avant la croissance par actions
-  if(o.score==null)o.score=0;if(o.frz==null)o.frz=0;core.S=o}}}catch(e){}return core.S};
+  if(o.score==null)o.score=0;if(o.frz==null)o.frz=0;
+  if(o.vie==null){o.vie=100;o.alerte=0;o.ko=0}if(o.eaten.tank==null)o.eaten.tank=0;core.S=o}}}catch(e){}return core.S};
 core.save=function(){if(core.nosave||!core.S)return;try{localStorage.setItem(KEY,JSON.stringify(core.S))}catch(e){}};
 core.reset=function(){core.S=null;if(core.nosave)return;try{localStorage.removeItem(KEY)}catch(e){}};
 core.start=function(sp,name){core.S=fresh(sp,name);core.save();return core.S};
@@ -94,7 +107,10 @@ core.advance=function(now){const S=core.S;if(!S)return false;
  S.energie=cl(S.energie+(sl?25*h:-7*m.e*k*h*(fou?4:1)));
  S.proprete=cl(S.proprete-rp*h);
  if(!sl)S.rage=cl(S.rage+600*m.r*k*h);      // de 0 à 100 en 10 minutes, éveillé, page ouverte
- if(sl&&S.energie>=100)S.sleep=false;
+ /* les blessures se referment : lentement éveillé, cinq fois plus vite endormi, pas du tout le ventre vide */
+ if(S.faim>0)S.vie=cl(S.vie+(sl?60:12)*h);
+ S.alerte=cl(S.alerte-240*h);
+ if(sl&&S.energie>=100&&S.vie>=100)S.sleep=false;
  if(S.faim<12)log('faim',8);
  if(S.starve>=36){S.dead=true;S.sleep=false;log('mort');return false}
  cityTick(now);
@@ -117,29 +133,43 @@ core.eat=function(type,n,now,mult){const S=core.S,w=core.busy(),fz=S.frz>now;if(
  if(S.stage<MIN[type])return{ok:0,why:'Trop gros pour lui.'};
  if(S.faim>=99.5&&!fz)return{ok:0,why:"Il n'a plus faim."};
  S.faim=cl(S.faim+FOOD[type][S.stage]*(fz?2:1));S.proprete=cl(S.proprete-1);if(!fz)S.energie=cl(S.energie-.4);S.eaten[type]+=n||1;
+ S.vie=cl(S.vie+SOIN[type]);S.alerte=cl(S.alerte+ALERTE[type]);
  log(type+'1');return{ok:1,g:gain(GAIN[type],(mult||1)*(fz?1.5:1))}};
+/* détruire une unité de l'armée : comme manger, mais il le fait même le ventre plein */
+core.crush=function(type,now,mult){const S=core.S,w=core.busy(),fz=S.frz>now;if(w)return{ok:0,why:w};
+ if(S.stage<MIN[type])return{ok:0,why:'Trop gros pour lui.'};
+ S.faim=cl(S.faim+FOOD[type][S.stage]*(fz?2:1));S.proprete=cl(S.proprete-1.5);if(!fz)S.energie=cl(S.energie-.6);S.eaten[type]++;
+ S.vie=cl(S.vie+SOIN[type]);S.alerte=cl(S.alerte+ALERTE[type]);
+ log(type+'1');return{ok:1,g:gain(GAIN[type],(mult||1)*(fz?1.5:1))}};
+/* niveau de riposte : 0 rien, 1 police, 2 armée (chars, hélicoptères armés), 3 aviation. Il dépend de l'alerte et de sa taille. */
+core.armee=function(){const S=core.S,a=S.alerte,st=S.stage;if(S.dead)return 0;return a>=80&&st>=4?3:a>=50&&st>=3?2:a>=25&&st>=2?1:0};
+/* un tir le touche. Déchaîné, il n'encaisse rien. À zéro il n'est pas tué : terrassé, il rentre se soigner. */
+core.wound=function(d,now){const S=core.S;if(S.dead||S.frz>now||S.vie<=0)return{d:0};
+ d*=CUIR[TV.art.SP[S.sp].id]||1;const av=S.vie;S.vie=Math.max(0,S.vie-d);
+ if(S.vie<=0){S.rage=0;S.alerte=0;S.energie=Math.min(S.energie,15);S.ko++;log('ko',1);return{d,ko:1}}
+ if(av>=40&&S.vie<40)log('blesse',6);return{d}};
 core.hit=function(i,now,mult){const S=core.S,b=S.city.b[i],w=core.busy(),fz=S.frz>now;if(w)return{ok:0,why:w};
  if(S.stage<MIN.bld)return{ok:0,why:'Trop petit pour ça.'};
  if(b.s>=3)return{ok:0,why:''};
  const was=b.s,pw=fz?3:S.rage>=50?2:1;                      // la rage double la force du coup
- b.s=Math.min(3,b.s+pw);b.t=now;S.proprete=cl(S.proprete-3);if(!fz){S.energie=cl(S.energie-2);S.rage=cl(S.rage-8)}
+ b.s=Math.min(3,b.s+pw);b.t=now;S.proprete=cl(S.proprete-3);S.alerte=cl(S.alerte+ALERTE.coup);if(!fz){S.energie=cl(S.energie-2);S.rage=cl(S.rage-8)}
  let g=null;
- if(b.s===3){S.eaten.bld++;if(!fz)S.rage=cl(S.rage-14);S.proprete=cl(S.proprete-6);if(S.stage>=4)S.faim=cl(S.faim+22);log('bld1');g=gain(GAIN.bld,(mult||1)*(fz?1.5:1))}
+ if(b.s===3){S.eaten.bld++;S.alerte=cl(S.alerte+ALERTE.chute);if(!fz)S.rage=cl(S.rage-14);S.proprete=cl(S.proprete-6);if(S.stage>=4)S.faim=cl(S.faim+22);log('bld1');g=gain(GAIN.bld,(mult||1)*(fz?1.5:1))}
  checkCity(now);return{ok:1,s:b.s,was,pw,g}};
 core.smash=function(i,now,mult){const S=core.S,p=S.city.props[i],w=core.busy(),fz=S.frz>now;if(w)return{ok:0,why:w};
  if(p.s)return{ok:0,why:''};
  if(S.stage<MIN[p.k])return{ok:0,why:'Trop solide pour lui.'};
- p.s=1;p.t=now;S.proprete=cl(S.proprete-1.5);if(!fz){S.rage=cl(S.rage-(p.k==='k'?9:6));S.energie=cl(S.energie-1)}
+ p.s=1;p.t=now;S.proprete=cl(S.proprete-1.5);S.alerte=cl(S.alerte+ALERTE[p.k]);if(!fz){S.rage=cl(S.rage-(p.k==='k'?9:6));S.energie=cl(S.energie-1)}
  log(p.k+'1');return{ok:1,g:gain(GAIN[p.k],(mult||1)*(fz?1.5:1))}};
 /* rugir : dans la tanière il s'échauffe (+10 de rage) ; en ville, à 80 de rage ou plus, il se déchaîne 12 secondes */
 core.roar=function(now,ville){const S=core.S;if(S.dead||S.sleep)return{ok:0,why:core.busy()};
  if(now-S.roarT<8000&&!(ville&&S.rage>=80))return{ok:0,why:'Il reprend son souffle.'};
  S.roarT=now;S.energie=cl(S.energie-1.5);
  if(!ville){S.rage=cl(S.rage+10);return{ok:1}}
- if(S.rage>=80){S.frz=now+12000;S.rage=0;log('frz1');return{ok:1,frz:1}}
- return{ok:1}};
+ if(S.rage>=80){S.frz=now+12000;S.rage=0;S.alerte=cl(S.alerte+ALERTE.frz);log('frz1');return{ok:1,frz:1}}
+ S.alerte=cl(S.alerte+ALERTE.rugir);return{ok:1}};
 core.sleep=function(on){const S=core.S;if(S.dead)return{ok:0,why:'Il ne bouge plus.'};
- if(on){if(S.rage>=70)return{ok:0,why:'Il est trop énervé pour dormir.'};if(S.energie>=90)return{ok:0,why:"Il n'a pas sommeil."}}
+ if(on){if(S.rage>=70)return{ok:0,why:'Il est trop énervé pour dormir.'};if(S.energie>=90&&S.vie>=100)return{ok:0,why:"Il n'a pas sommeil."}}
  S.sleep=on;return{ok:1}};
 /* laver : on le frotte soi-même. washStep ajoute de la propreté à chaque frottement, washEnd paie la croissance */
 core.washCan=function(){const S=core.S,w=S.dead?'Il ne bouge plus.':S.sleep?'Il dort.':'';if(w)return{ok:0,why:w};
@@ -155,19 +185,21 @@ core.playEnd=function(q,now){const S=core.S;S.playT=now;S.rage=cl(S.rage-[5,15,2
 
 /* message d'état affiché sous la scène */
 core.humeur=function(now){const S=core.S;if(S.dead)return["Il s'est éteint.",1];if(S.stage===0)return["Touche l'œuf pour l'aider à sortir.",0];
- if(S.sleep)return['Il dort. Il grandit deux fois plus vite.',0];const st=core.stats(now);
- if(S.frz>now)return['Déchaîné.',1];
+ if(S.sleep)return[S.vie<100?'Il dort. Ses blessures se referment.':'Il dort. Il grandit deux fois plus vite.',0];const st=core.stats(now);
+ if(S.frz>now)return['Déchaîné. Rien ne peut le blesser.',1];
+ if(S.vie<25)return['Grièvement blessé. Seul le sommeil le soignera.',1];
  if(S.faim<25)return[st.lit>0?'Il a faim. Il reste des lumières en ville.':'Il a faim, et la ville est éteinte.',1];
  if(S.rage>=100)return['Fou de rage : il saccage tout et s\'épuise.',1];
  if(S.energie<20)return['Il tombe de fatigue.',1];
  if(S.rage>=80)return['Il bout. En ville, rugir le déchaînera.',1];
  if(S.proprete<25)return['Il est couvert de suie.',1];
+ if(S.vie<60)return['Il est blessé. Manger et dormir le soignent.',1];
  if(S.rage>=50)return['Il s\'échauffe. Ses coups comptent double.',0];return['Il est calme.',0]};
 
 /* partie de démonstration, jamais sauvegardée : stade 0 à 4, espèce, quelques ruines */
 core.demo=function(o){core.nosave=true;const now=Date.now(),S=fresh(o.sp||0,o.name||PRENOMS[(o.sp||0)%PRENOMS.length]);
  S.stage=o.stage;if(o.stage>0){S.hatch=now-(AGE[o.stage]*1000+2*36e5);S.grow=AGE[o.stage]+7200}
- if(o.faim!=null)S.faim=o.faim;if(o.rage!=null)S.rage=o.rage;
+ if(o.faim!=null)S.faim=o.faim;if(o.rage!=null)S.rage=o.rage;if(o.vie!=null)S.vie=o.vie;if(o.alerte!=null)S.alerte=o.alerte;
  if(o.ruines){const b=S.city.b;b[1].s=1;b[1].t=now;b[2].s=2;b[2].t=now;b[3].s=3;b[3].t=now-.5*36e5;b[5].s=3;b[5].t=now-3*36e5;b[6].s=3;b[6].t=now-6*36e5}
  core.S=S;return S};
 TV.core=core;
